@@ -4,6 +4,10 @@ email: luke_imhoff@rapid7.com
 description: "Things I've learned while working on metasploit-framework and Metasploit Pro at Rapid7"
 baseurl: ""
 url: "http://limhoff-r7.github.io"
+github:
+  username: limhoff-r7
+twitter:
+  username: KronicDeth
 
 # Build settings
 encoding: utf-8
