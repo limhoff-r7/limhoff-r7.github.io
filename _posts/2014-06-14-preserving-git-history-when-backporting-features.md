@@ -12,8 +12,8 @@ to `master`, except those from the branch whose history I'm preserving, so I cou
 trick, but use `master` for `<branch>` and layer it on top of the a branch off the feature branch to remove all code
 that I didn't want to backport.
 
-Here's how I did it.
 
+Here's how I did it.
 
 Start with a branch off of the branch with the features you want
 
