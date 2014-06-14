@@ -4,13 +4,7 @@ layout: post
 title: "Preserving git history when backporting features"
 ---
 
-I needed to backport the `MetasploitDataModels::Search` feature from the new module cache so the team can use it on the
-search in the next release, which won't contain the new module cache.  Everything I could find on Google could get the
-file, from a branch with `git checkout <branch> <file>`, but that meant the history gets lost, from `<branch>`.  That's
-when I realized, that I don't care about preserving the history from `master`, since there won't be any changes relative
-to `master`, except those from the branch whose history I'm preserving, so I could use `git checkout <branch> <file>`
-trick, but use `master` for `<branch>` and layer it on top of the a branch off the feature branch to remove all code
-that I didn't want to backport.
+I needed to backport the `MetasploitDataModels::Search` feature from the new module cache so the team can use it on the search in the next release, which won't contain the new module cache.  Everything I could find on Google could get the file, from a branch with `git checkout <branch> <file>`, but that meant the history gets lost, from `<branch>`.  That's when I realized, that I don't care about preserving the history from `master`, since there won't be any changes relative to `master`, except those from the branch whose history I'm preserving, so I could use `git checkout <branch> <file>` trick, but use `master` for `<branch>` and layer it on top of the a branch off the feature branch to remove all code that I didn't want to backport.
 
 
 Here's how I did it.
@@ -28,27 +22,20 @@ Check the differences between the backport branch and the target branch (`master
 (feature/MSP-10016/metasploit-data-models-search) > git diff --name-status master..
 ```
 
-This is everything that’s changed, but I don't want to restore all of `master`, I want preserve the feature to be
-backported, `lib/metasploit_data_models/search` and its accompanying specs.  First I’ll attempt just restoring all of
-`master`.  This will restore files to their unmodified state from `master`, without deleting files that
-`feature/MSP-10016/metasploit-data-models-search` had added in its history.
+This is everything that’s changed, but I don't want to restore all of `master`, I want preserve the feature to be backported, `lib/metasploit_data_models/search` and its accompanying specs.  First I’ll attempt just restoring all of `master`.  This will restore files to their unmodified state from `master`, without deleting files that `feature/MSP-10016/metasploit-data-models-search` had added in its history.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git checkout master -- .
 (feature/MSP-10016/metasploit-data-models-search) > git status
 ```
 
-So, I have a bunch of `'modified'` and `'new file'` statuses.  The `‘new file’` status is from files that exist in
-`master`, but were deleted in `feature/MSP-10016/metasploit-data-models-search` and are now being restored.  The
-`git checkout master — .` added all the files to the index, so I now need to use `git diff --cached` as `--cached` will
-diff against the index..
+So, I have a bunch of `'modified'` and `'new file'` statuses.  The `‘new file’` status is from files that exist in `master`, but were deleted in `feature/MSP-10016/metasploit-data-models-search` and are now being restored.  The `git checkout master — .` added all the files to the index, so I now need to use `git diff --cached` as `--cached` will diff against the index..
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git diff --cached --name-status master
 ```
 
-There are added models under `app/models/mdm` that need to be removed because they're from the new module cache, but I
-want to keep `app/models/metasploit_data_models`, so I'll delete `app/models/mdm` added files:
+There are added models under `app/models/mdm` that need to be removed because they're from the new module cache, but I want to keep `app/models/metasploit_data_models`, so I'll delete `app/models/mdm` added files:
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master app/models/mdm`
@@ -144,8 +131,7 @@ A     spec/support/shared/examples/metasploit_data_models/search/visitor/where/v
 A     spec/support/shared/examples/metasploit_data_models/search/visitor/where/visit/with_metasploit_model_search_group_base.rb
 ```
 
-I'll skip `config/locales.en.yml` for now as I may need to do line edits there, so the next directory to clean up is
-`db`.  Any new migrations or seeds can be ignored so I can just do the selective delete again
+I'll skip `config/locales.en.yml` for now as I may need to do line edits there, so the next directory to clean up is `db`.  Any new migrations or seeds can be ignored so I can just do the selective delete again.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master db`
@@ -153,8 +139,7 @@ rm 'db/migrate/*
 rm 'db/seeds.rb'
 ```
 
-I also know that the additions to the `docs` directory are unneeded since they document upgrade steps for the module
-cache.
+I also know that the additions to the `docs` directory are unneeded since they document upgrade steps for the module cache.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master docs`
@@ -178,16 +163,14 @@ A     lib/metasploit_data_models/search/visitor.rb
 A     lib/metasploit_data_models/unique_task_joins.rb
 ```
 
-`lib/metasploit_data_models/attempt.rb` is common code between `Mdm::ExploitAttempt` and `Mdm::VulnAttempt`, but I'm
-not taking that refactor, so it can be deleted.
+`lib/metasploit_data_models/attempt.rb` is common code between `Mdm::ExploitAttempt` and `Mdm::VulnAttempt`, but I'm not taking that refactor, so it can be deleted.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm lib/metasploit_data_models/attempt.rb
 rm 'lib/metasploit_data_models/attempt.rb'
 ```
 
-`lib/metasploit_data_models/batch*` is part of the batching system that disables costly per record uniqueness
-validations for the module cache, so it's out.
+`lib/metasploit_data_models/batch*` is part of the batching system that disables costly per record uniqueness validations for the module cache, so it's out.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm -r lib/metasploit_data_models/batch*
@@ -196,8 +179,7 @@ rm 'lib/metasploit_data_models/batch/descendant.rb'
 rm 'lib/metasploit_data_models/batch/root.rb'
 ```
 
-The ERD system has been moved to `metasploit-erd`, but I don't want that part of this backport, so I'll remove
-`lib/metasploit_data_models/entity_relationship_diagram*`.
+The ERD system has been moved to `metasploit-erd`, but I don't want that part of this backport, so I'll remove `lib/metasploit_data_models/entity_relationship_diagram*`.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm -r lib/metasploit_data_models/entity_relationship_diagram*
@@ -212,17 +194,14 @@ While I'm at it, I'll also remove the rake task
 rm 'lib/tasks/erd.rake'
 ```
 
-`NullProgressBar` is part progress bar system for `Mdm::Module::Path`, which I already removed, so
-`lib/metasploit_data_models/null_progress_bar.rb` can be removed too.
+`NullProgressBar` is part progress bar system for `Mdm::Module::Path`, which I already removed, so `lib/metasploit_data_models/null_progress_bar.rb` can be removed too.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm lib/metasploit_data_models/null_progress_bar.rb
 rm 'lib/metasploit_data_models/null_progress_bar.rb'
 ```
 
-I'll obvious want to keep `lib/metasploit_data_models/search*`, so that just leaves
-`lib/metasploit_data_models/unique_task_joins.rb`.  I don't need it because it's part of migration refactors I
-already threw away.
+I'll obvious want to keep `lib/metasploit_data_models/search*`, so that just leaves `lib/metasploit_data_models/unique_task_joins.rb`.  I don't need it because it's part of migration refactors I already threw away.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm lib/metasploit_data_models/unique_task_joins.rb
@@ -237,9 +216,7 @@ A     lib/metasploit_data_models/search.rb
 A     lib/metasploit_data_models/search/visitor.rb
 ```
 
-So, now `app` and `lib` are good, but that means spec needs to be cleaned.  I could just iteratively run the specs
-until they pass, but `rspec` won't run with undefined classes in the `describe` block, so let's mirror the deletes I
-did in `app` and `lib` in `spec`:
+So, now `app` and `lib` are good, but that means spec needs to be cleaned.  I could just iteratively run the specs until they pass, but `rspec` won't run with undefined classes in the `describe` block, so let's mirror the deletes I did in `app` and `lib` in `spec`:
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master spec/app/models/mdm`
@@ -250,8 +227,7 @@ rm 'spec/db/seeds_spec.rb'
 rm 'spec/factories/mdm/*'
 ```
 
-I can safely delete `spec/lib/metasploit_data_models` because the there are no specs for
-`lib/metasploit_data_models` code I want to preserve because they are just namespace `Module`s.
+I can safely delete `spec/lib/metasploit_data_models` because the there are no specs for `lib/metasploit_data_models` code I want to preserve because they are just namespace `Module`s.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master spec/lib/metasploit_data_models`
@@ -261,8 +237,7 @@ rm 'spec/lib/metasploit_data_models/batch/root_spec.rb'
 rm 'spec/lib/metasploit_data_models/batch_spec.rb'
 ```
 
-Thankfully, most of the shared examples have names that match the classes for which they are used, so we can delete
-shared examples for classes I didn't backport
+Thankfully, most of the shared examples have names that match the classes for which they are used, so we can delete shared examples for classes I didn't backport
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master spec/support/shared/examples/mdm`
@@ -356,8 +331,7 @@ A     spec/support/shared/examples/metasploit_data_models/search/visitor/where/v
 A     spec/support/shared/examples/metasploit_data_models/search/visitor/where/visit/with_metasploit_model_search_group_base.rb
 ```
 
-`config/locals/en.yml` and `spec/dummy/config/initializers/active_record_migrations.rb` might not be needed, but I'm not
-sure, so let's test.
+`config/locals/en.yml` and `spec/dummy/config/initializers/active_record_migrations.rb` might not be needed, but I'm not sure, so let's test.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > rake db:drop db:create db:migrate
@@ -367,22 +341,10 @@ sure, so let's test.
 ...
 ```
 
-Whoops, I lost `metasploit-model` because I replaced the the `gemspec` and `Gemfile` with the one from `master`, which
-doesn't know about `metasploit-model`.  So, I'll add `metasploit-model` back to the `gemspec`.
+Whoops, I lost `metasploit-model` because I replaced the the `gemspec` and `Gemfile` with the one from `master`, which doesn't know about `metasploit-model`.  So, I'll add `metasploit-model` back to the `gemspec`.
 
-```
-diff --git a/metasploit_data_models.gemspec b/metasploit_data_models.gemspec
-index 71fa7d2..6354403 100644
---- a/metasploit_data_models.gemspec
-+++ b/metasploit_data_models.gemspec
-@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
-   # @see MSP-2971
-   s.add_runtime_dependency 'activerecord', '>= 3.2.13', '< 4.0.0'
-   s.add_runtime_dependency 'activesupport'
-+  s.add_runtime_dependency 'metasploit-model', '>= 0.24.1.pre.semantic.pre.versioning.pre.2.pre.0', '< 0.25'
-  
-   if RUBY_PLATFORM =~ /java/
-     # markdown formatting for yard
+```ruby
+  s.add_runtime_dependency 'metasploit-model', '>= 0.24.1.pre.semantic.pre.versioning.pre.2.pre.0', '< 0.25'
 ```
 
 ```sh
@@ -401,19 +363,9 @@ Try specs again
 
 `Metasploit` isn't resolving, so the code is probably missing the explicit `require` in `lib/metasploit_data_models.rb`.
 
-diff --git a/lib/metasploit_data_models.rb b/lib/metasploit_data_models.rb
-index 70d408d..936753d 100755
---- a/lib/metasploit_data_models.rb
-+++ b/lib/metasploit_data_models.rb
-@@ -10,6 +10,7 @@ require 'active_record'
- require 'active_support'
- require 'active_support/all'
- require 'active_support/dependencies'
-+require 'metasploit/model'
- 
- #
- # Project
-
+```ruby
+require 'metasploit/model
+```
 
 Test again
 
@@ -424,10 +376,7 @@ NameError: uninitialized constant Mdm::Module::Instance
 ...
 ```
 
-Whoops, looks like the tests for `MetasploitDataModels::Search::Visitor::*` were written against the actual, new module
-cache classes instead of dummy classes, which is great for behavior testing on the module caching branches, but does us
-no good now where I don't yet have classes that can be searched.  Thankfully, from the spec comments I know what I
-need to supply to use a class I do have:
+Whoops, looks like the tests for `MetasploitDataModels::Search::Visitor::*` were written against the actual, new module cache classes instead of dummy classes, which is great for behavior testing on the module caching branches, but does us no good now where I don't yet have classes that can be searched.  Thankfully, from the spec comments I know what I need to supply to use a class I do have:
 
 ```ruby
         Metasploit::Model::Search::Operator::Attribute.new(
@@ -438,9 +387,7 @@ need to supply to use a class I do have:
         )
 ```
 
-Fortunately, as part of the search usage, I know the team will want to eventually make `Mdm::Host` and `Mdm::Service`
-searchable, so I'll use `Mdm::Host` in place of `Mdm::Module::Instance` and `Mdm::Service` for any associations for
-`Mdm::Module::Instance` to test the join and include logic.
+Fortunately, as part of the search usage, I know the team will want to eventually make `Mdm::Host` and `Mdm::Service` searchable, so I'll use `Mdm::Host` in place of `Mdm::Module::Instance` and `Mdm::Service` for any associations for `Mdm::Module::Instance` to test the join and include logic.
 
 ```
 diff --git a/spec/app/models/metasploit_data_models/search/visitor/attribute_spec.rb b/spec/app/models/metasploit_data_models/search/visitor/attribute_spec.rb
@@ -464,26 +411,10 @@ Test just that file
 
 ```sh
  (feature/MSP-10016/metasploit-data-models-search) > rspec spec/app/models/metasploit_data_models/search/visitor/attribute_spec.rb
-
-MetasploitDataModels::Search::Visitor::Attribute
-  #visit
-    with Metasploit::Model::Search::Operator::Attribute
-      should be a kind of Arel::Attributes::Attribute
-      relation
-        should be Class#arel_table for Metasploit::Model::Search::Operator::Attribute#klass
-      name
-        should be Metasploit::Model::Search::Operator::Attribute#attribute
-    with Metasploit::Model::Search::Operator::Association
-      should return visit of Metasploit::Model::Search::Operator::Association#attribute_operator
-      should visit Metasploit::Model::Search::Operator::Association#attribute_operator
-
-
-Finished in 0.0211 seconds
 5 examples, 0 failures
 ```
 
-Ok, so that works.  Now, let's do the same for `spec/app/models/metasploit_data_models/search/visitor/includes_spec.rb`
-and rerun all the specs.
+Ok, so that works.  Now, let's do the same for `spec/app/models/metasploit_data_models/search/visitor/includes_spec.rb` and rerun all the specs.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > rake spec
@@ -540,7 +471,6 @@ class Mdm::Service
 end
 ```
 
-
 Now to test
 
 ```sh
@@ -548,9 +478,7 @@ Now to test
 24 examples, 0 failures
 ```
 
-The rest of the specs require manual changes... so I'll just gloss over those, you can see the
-[commit](https://github.com/rapid7/metasploit_data_models/commit/f0ace106f10252b4516d01ce35d591d3172a1d29). Finally,
-check all the changes.
+The rest of the specs require manual changes... so I'll just gloss over those, you can see the [commit](https://github.com/rapid7/metasploit_data_models/commit/f0ace106f10252b4516d01ce35d591d3172a1d29). Finally, check all the changes.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search)> git diff --cached --name-status master
@@ -571,9 +499,7 @@ A     spec/support/shared/examples/metasploit_data_models/search/visitor/where/v
 A     spec/support/shared/examples/metasploit_data_models/search/visitor/where/visit/with_metasploit_model_search_group_base.rb
 ```
 
-Unfortunately, when I opened the pull request, github showed redundant changes in the Changed Files tab.  This was
-because `feature/exploit` (the parent of `feature/MSP-10016/metasploit-data-models-search)` didn't have the current
-`HEAD` of `master` as a parent, so merge it.
+Unfortunately, when I opened the pull request, github showed redundant changes in the Changed Files tab.  This was because `feature/exploit` (the parent of `feature/MSP-10016/metasploit-data-models-search)` didn't have the current `HEAD` of `master` as a parent, so merge it.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search)> git merge master
@@ -586,9 +512,7 @@ Recorded preimage for 'lib/metasploit_data_models/version.rb'
 Automatic merge failed; fix conflicts and then commit the result.
 ```
 
-The conflicts turned out to be trivial, so those are fixed, and now the diff only shows the expected changes, so `push`
-to github and check again and it worked.  [Egypt](https://github.com/jlee-r7) pointed out that I can reproduce the
-Files Changed on github using
+The conflicts turned out to be trivial, so those are fixed, and now the diff only shows the expected changes, so `push` to github and check again and it worked.  [Egypt](https://github.com/jlee-r7) pointed out that I can reproduce the Files Changed on github using
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search)> git diff --name-status master...
@@ -610,8 +534,6 @@ While '...' (3 dots):
            ancestor of both <commit>. "git diff A...B" is equivalent to "git diff $(git-merge-base A B) B". You can omit any
            one of <commit>, which has the same effect as using HEAD instead.
 
-As you'll note in the docs, `...` is equivalent to `git-merge-base`, which I just learned about now, so obviously when
-trying to check what the merge would look like we should use `...` because it uses the point from which a merge will be
-calculated.
+As you'll note in the docs, `...` is equivalent to `git-merge-base`, which I just learned about now, so obviously when trying to check what the merge would look like we should use `...` because it uses the point from which a merge will be calculated.
 
 The final [pull request](https://github.com/rapid7/metasploit_data_models/pull/59)
