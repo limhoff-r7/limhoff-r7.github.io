@@ -1,7 +1,11 @@
 # Site settings
 title: Working in the Code Mines
 email: luke_imhoff@rapid7.com
-description: "Things I've learned while working on metasploit-framework and Metasploit Pro at Rapid7"
+description: >
+               Things I've learned while working on
+               <a href="https://github.com/rapid7/metasploit-framework">metasploit-framework</a> and
+               <a href="https://metasploit.com">Metasploit Pro</a> at <a href="https://rapid7.com">Rapid7</a>
+
 baseurl: ""
 url: "http://limhoff-r7.github.io"
 github:
