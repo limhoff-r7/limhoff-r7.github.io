@@ -96,62 +96,8 @@ A     app/models/metasploit_data_models/search/visitor/method.rb
 A     app/models/metasploit_data_models/search/visitor/relation.rb
 A     app/models/metasploit_data_models/search/visitor/where.rb
 A     config/locales/en.yml
-A     db/migrate/20130524210148_create_module_paths.rb
-A     db/migrate/20130528183122_add_parent_path_to_module_details.rb
-A     db/migrate/20130530222124_change_column_null_in_module_actions.rb
-A     db/migrate/20130531005804_unique_name_scopedto_detail_id_in_module_actions.rb
-A     db/migrate/20130531140620_change_column_null_in_module_archs.rb
-A     db/migrate/20130531161050_unique_name_scoped_to_detail_id_in_module_archs.rb
-A     db/migrate/20130531175202_change_required_columns_to_null_false_in_module_authors.rb
-A     db/migrate/20130531185216_unique_name_scoped_to_detail_id_in_module_authors.rb
-A     db/migrate/20130602182516_create_module_ancestors.rb
-A     db/migrate/20130602202346_create_module_ranks.rb
-A     db/migrate/20130602202347_create_module_classes.rb
-A     db/migrate/20130602214406_create_module_relationships.rb
-A     db/migrate/20130602230424_create_module_instances.rb
-A     db/migrate/20130612134845_associate_module_actions_to_module_instances.rb
-A     db/migrate/20130612155900_create_architectures.rb
-A     db/migrate/20130612213434_change_hosts_arch_to_architecture_id.rb
-A     db/migrate/20130613131314_replace_module_archs_with_module_architectures.rb
-A     db/migrate/20130613152322_drop_module_mixins.rb
-A     db/migrate/20130613200029_create_platforms.rb
-A     db/migrate/20130614130338_change_module_platforms_to_join_model.rb
-A     db/migrate/20130614181004_create_authorities.rb
-A     db/migrate/20130617151106_create_references.rb
-A     db/migrate/20130618150940_create_module_references.rb
-A     db/migrate/20130618163932_create_vuln_references.rb
-A     db/migrate/20130618185051_drop_module_refs.rb
-A     db/migrate/20130618190204_translate_refs_to_references.rb
-A     db/migrate/20130618204649_drop_refs.rb
-A     db/migrate/20130618205631_drop_vulns_refs.rb
-A     db/migrate/20130619020112_create_authors.rb
-A     db/migrate/20130619195002_create_email_addresses.rb
-A     db/migrate/20130619204107_repurpose_module_authors.rb
-A     db/migrate/20130619212332_reference_module_instances_in_module_targets.rb
-A     db/migrate/20130619215217_drop_module_details.rb
-A     db/migrate/20130620182424_rename_hosts_tags_to_host_tags.rb
-A     db/migrate/20130620194037_unique_host_tags.rb
-A     db/migrate/20130621173328_change_required_columns_to_null_false_in_api_keys.rb
-A     db/migrate/20130621181259_unique_token_in_api_keys.rb
-A     db/migrate/20130626183210_drop_mod_refs.rb
-A     db/migrate/20130627175028_unique_task_creds.rb
-A     db/migrate/20130629144839_unique_task_hosts.rb
-A     db/migrate/20130629164610_unique_task_services.rb
-A     db/migrate/20130629173534_unique_task_sessions.rb
-A     db/migrate/20131009212856_add_full_to_email_address.rb
-A     db/migrate/20131015191312_nested_set_platforms.rb
-A     db/migrate/20131028181307_create_module_target_architectures.rb
-A     db/migrate/20131028181807_create_module_target_platforms.rb
-A     db/migrate/20131030182452_remove_index_from_module_targets.rb
-A     db/migrate/20140106022804_add_module_class_id_to_exploit_attempts.rb
-A     db/migrate/20140106180149_replace_platform_with_architecture_id_and_platform_id_in_sessions.rb
-A     db/migrate/20140107170605_add_exploit_class_id_and_payload_class_id_to_sessions.rb
-A     db/migrate/20140108154835_add_module_class_id_to_vuln_attempts.rb
-A     db/migrate/20140110145215_changed_required_columns_to_null_false_in_exploit_attempts.rb
-A     db/migrate/20140110145947_changed_required_columns_to_null_false_in_vuln_attempts.rb
-A     db/seeds.rb
-A     docs/images/.gitkeep
-A     docs/mdm_module_sql_translation.md
+A     db/*
+A     docs/*
 A     lib/metasploit_data_models/attempt.rb
 A     lib/metasploit_data_models/batch.rb
 A     lib/metasploit_data_models/batch/descendant.rb
@@ -164,28 +110,7 @@ A     lib/metasploit_data_models/search/visitor.rb
 A     lib/metasploit_data_models/unique_task_joins.rb
 A     lib/tasks/erd.rake
 A     spec/app/models/mdm/api_key_spec.rb
-A     spec/app/models/mdm/architecture_spec.rb
-A     spec/app/models/mdm/author_spec.rb
-A     spec/app/models/mdm/authority_spec.rb
-A     spec/app/models/mdm/email_address_spec.rb
-A     spec/app/models/mdm/module/ancestor_spec.rb
-A     spec/app/models/mdm/module/architecture_spec.rb
-A     spec/app/models/mdm/module/class_spec.rb
-A     spec/app/models/mdm/module/instance_spec.rb
-A     spec/app/models/mdm/module/path_spec.rb
-A     spec/app/models/mdm/module/rank_spec.rb
-A     spec/app/models/mdm/module/reference_spec.rb
-A     spec/app/models/mdm/module/relationship_spec.rb
-A     spec/app/models/mdm/module/target/architecture_spec.rb
-A     spec/app/models/mdm/module/target/platform_spec.rb
-A     spec/app/models/mdm/platform_spec.rb
-A     spec/app/models/mdm/reference_spec.rb
-A     spec/app/models/mdm/report_spec.rb
-A     spec/app/models/mdm/report_template_spec.rb
-A     spec/app/models/mdm/task_cred_spec.rb
-A     spec/app/models/mdm/task_session_spec.rb
-A     spec/app/models/mdm/vuln_detail_spec.rb
-A     spec/app/models/mdm/vuln_reference_spec.rb
+...
 A     spec/app/models/metasploit_data_models/search/visitor/attribute_spec.rb
 A     spec/app/models/metasploit_data_models/search/visitor/includes_spec.rb
 A     spec/app/models/metasploit_data_models/search/visitor/joins_spec.rb
@@ -195,26 +120,7 @@ A     spec/app/models/metasploit_data_models/search/visitor/where_spec.rb
 A     spec/db/seeds_spec.rb
 A     spec/dummy/config/initializers/active_record_migrations.rb
 A     spec/factories/mdm/api_keys.rb
-A     spec/factories/mdm/architectures.rb
-A     spec/factories/mdm/attempts.rb
-A     spec/factories/mdm/authorities.rb
-A     spec/factories/mdm/authors.rb
-A     spec/factories/mdm/email_addresses.rb
-A     spec/factories/mdm/module/ancestors.rb
-A     spec/factories/mdm/module/architectures.rb
-A     spec/factories/mdm/module/classes.rb
-A     spec/factories/mdm/module/instances.rb
-A     spec/factories/mdm/module/paths.rb
-A     spec/factories/mdm/module/ranks.rb
-A     spec/factories/mdm/module/references.rb
-A     spec/factories/mdm/module/relationships.rb
-A     spec/factories/mdm/module/target/architectures.rb
-A     spec/factories/mdm/module/target/platforms.rb
-A     spec/factories/mdm/platforms.rb
-A     spec/factories/mdm/references.rb
-A     spec/factories/mdm/report_templates.rb
-A     spec/factories/mdm/reports.rb
-A     spec/factories/mdm/vuln_references.rb
+...
 A     spec/lib/metasploit_data_models/base64_serializer_spec.rb
 A     spec/lib/metasploit_data_models/batch/descendant_spec.rb
 A     spec/lib/metasploit_data_models/batch/root_spec.rb
@@ -243,59 +149,7 @@ I'll skip `config/locales.en.yml` for now as I may need to do line edits there, 
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master db`
-rm 'db/migrate/20130524210148_create_module_paths.rb'
-rm 'db/migrate/20130528183122_add_parent_path_to_module_details.rb'
-rm 'db/migrate/20130530222124_change_column_null_in_module_actions.rb'
-rm 'db/migrate/20130531005804_unique_name_scopedto_detail_id_in_module_actions.rb'
-rm 'db/migrate/20130531140620_change_column_null_in_module_archs.rb'
-rm 'db/migrate/20130531161050_unique_name_scoped_to_detail_id_in_module_archs.rb'
-rm 'db/migrate/20130531175202_change_required_columns_to_null_false_in_module_authors.rb'
-rm 'db/migrate/20130531185216_unique_name_scoped_to_detail_id_in_module_authors.rb'
-rm 'db/migrate/20130602182516_create_module_ancestors.rb'
-rm 'db/migrate/20130602202346_create_module_ranks.rb'
-rm 'db/migrate/20130602202347_create_module_classes.rb'
-rm 'db/migrate/20130602214406_create_module_relationships.rb'
-rm 'db/migrate/20130602230424_create_module_instances.rb'
-rm 'db/migrate/20130612134845_associate_module_actions_to_module_instances.rb'
-rm 'db/migrate/20130612155900_create_architectures.rb'
-rm 'db/migrate/20130612213434_change_hosts_arch_to_architecture_id.rb'
-rm 'db/migrate/20130613131314_replace_module_archs_with_module_architectures.rb'
-rm 'db/migrate/20130613152322_drop_module_mixins.rb'
-rm 'db/migrate/20130613200029_create_platforms.rb'
-rm 'db/migrate/20130614130338_change_module_platforms_to_join_model.rb'
-rm 'db/migrate/20130614181004_create_authorities.rb'
-rm 'db/migrate/20130617151106_create_references.rb'
-rm 'db/migrate/20130618150940_create_module_references.rb'
-rm 'db/migrate/20130618163932_create_vuln_references.rb'
-rm 'db/migrate/20130618185051_drop_module_refs.rb'
-rm 'db/migrate/20130618190204_translate_refs_to_references.rb'
-rm 'db/migrate/20130618204649_drop_refs.rb'
-rm 'db/migrate/20130618205631_drop_vulns_refs.rb'
-rm 'db/migrate/20130619020112_create_authors.rb'
-rm 'db/migrate/20130619195002_create_email_addresses.rb'
-rm 'db/migrate/20130619204107_repurpose_module_authors.rb'
-rm 'db/migrate/20130619212332_reference_module_instances_in_module_targets.rb'
-rm 'db/migrate/20130619215217_drop_module_details.rb'
-rm 'db/migrate/20130620182424_rename_hosts_tags_to_host_tags.rb'
-rm 'db/migrate/20130620194037_unique_host_tags.rb'
-rm 'db/migrate/20130621173328_change_required_columns_to_null_false_in_api_keys.rb'
-rm 'db/migrate/20130621181259_unique_token_in_api_keys.rb'
-rm 'db/migrate/20130626183210_drop_mod_refs.rb'
-rm 'db/migrate/20130627175028_unique_task_creds.rb'
-rm 'db/migrate/20130629144839_unique_task_hosts.rb'
-rm 'db/migrate/20130629164610_unique_task_services.rb'
-rm 'db/migrate/20130629173534_unique_task_sessions.rb'
-rm 'db/migrate/20131009212856_add_full_to_email_address.rb'
-rm 'db/migrate/20131015191312_nested_set_platforms.rb'
-rm 'db/migrate/20131028181307_create_module_target_architectures.rb'
-rm 'db/migrate/20131028181807_create_module_target_platforms.rb'
-rm 'db/migrate/20131030182452_remove_index_from_module_targets.rb'
-rm 'db/migrate/20140106022804_add_module_class_id_to_exploit_attempts.rb'
-rm 'db/migrate/20140106180149_replace_platform_with_architecture_id_and_platform_id_in_sessions.rb'
-rm 'db/migrate/20140107170605_add_exploit_class_id_and_payload_class_id_to_sessions.rb'
-rm 'db/migrate/20140108154835_add_module_class_id_to_vuln_attempts.rb'
-rm 'db/migrate/20140110145215_changed_required_columns_to_null_false_in_exploit_attempts.rb'
-rm 'db/migrate/20140110145947_changed_required_columns_to_null_false_in_vuln_attempts.rb'
+rm 'db/migrate/*
 rm 'db/seeds.rb'
 ```
 
@@ -389,53 +243,11 @@ did in `app` and `lib` in `spec`:
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master spec/app/models/mdm`
-rm 'spec/app/models/mdm/api_key_spec.rb'
-rm 'spec/app/models/mdm/architecture_spec.rb'
-rm 'spec/app/models/mdm/author_spec.rb'
-rm 'spec/app/models/mdm/authority_spec.rb'
-rm 'spec/app/models/mdm/email_address_spec.rb'
-rm 'spec/app/models/mdm/module/ancestor_spec.rb'
-rm 'spec/app/models/mdm/module/architecture_spec.rb'
-rm 'spec/app/models/mdm/module/class_spec.rb'
-rm 'spec/app/models/mdm/module/instance_spec.rb'
-rm 'spec/app/models/mdm/module/path_spec.rb'
-rm 'spec/app/models/mdm/module/rank_spec.rb'
-rm 'spec/app/models/mdm/module/reference_spec.rb'
-rm 'spec/app/models/mdm/module/relationship_spec.rb'
-rm 'spec/app/models/mdm/module/target/architecture_spec.rb'
-rm 'spec/app/models/mdm/module/target/platform_spec.rb'
-rm 'spec/app/models/mdm/platform_spec.rb'
-rm 'spec/app/models/mdm/reference_spec.rb'
-rm 'spec/app/models/mdm/report_spec.rb'
-rm 'spec/app/models/mdm/report_template_spec.rb'
-rm 'spec/app/models/mdm/task_cred_spec.rb'
-rm 'spec/app/models/mdm/task_session_spec.rb'
-rm 'spec/app/models/mdm/vuln_detail_spec.rb'
-rm 'spec/app/models/mdm/vuln_reference_spec.rb'
+rm 'spec/app/models/mdm/*'
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master spec/app/models/mdm`
 rm 'spec/db/seeds_spec.rb'
 (feature/MSP-10016/metasploit-data-models-search) > git rm `git diff --cached --name-only master spec/factories/mdm`
-rm 'spec/factories/mdm/api_keys.rb'
-rm 'spec/factories/mdm/architectures.rb'
-rm 'spec/factories/mdm/attempts.rb'
-rm 'spec/factories/mdm/authorities.rb'
-rm 'spec/factories/mdm/authors.rb'
-rm 'spec/factories/mdm/email_addresses.rb'
-rm 'spec/factories/mdm/module/ancestors.rb'
-rm 'spec/factories/mdm/module/architectures.rb'
-rm 'spec/factories/mdm/module/classes.rb'
-rm 'spec/factories/mdm/module/instances.rb'
-rm 'spec/factories/mdm/module/paths.rb'
-rm 'spec/factories/mdm/module/ranks.rb'
-rm 'spec/factories/mdm/module/references.rb'
-rm 'spec/factories/mdm/module/relationships.rb'
-rm 'spec/factories/mdm/module/target/architectures.rb'
-rm 'spec/factories/mdm/module/target/platforms.rb'
-rm 'spec/factories/mdm/platforms.rb'
-rm 'spec/factories/mdm/references.rb'
-rm 'spec/factories/mdm/report_templates.rb'
-rm 'spec/factories/mdm/reports.rb'
-rm 'spec/factories/mdm/vuln_references.rb'
+rm 'spec/factories/mdm/*'
 ```
 
 I can safely delete `spec/lib/metasploit_data_models` because the there are no specs for
@@ -671,354 +483,7 @@ Finished in 0.0211 seconds
 ```
 
 Ok, so that works.  Now, let's do the same for `spec/app/models/metasploit_data_models/search/visitor/includes_spec.rb`
-
-```
-diff --git a/spec/app/models/metasploit_data_models/search/visitor/includes_spec.rb b/spec/app/models/metasploit_data_models/search/visitor/includes_spec.rb
-index 91ca5b2..c9a1823 100644
---- a/spec/app/models/metasploit_data_models/search/visitor/includes_spec.rb
-+++ b/spec/app/models/metasploit_data_models/search/visitor/includes_spec.rb
-@@ -84,316 +84,40 @@ describe MetasploitDataModels::Search::Visitor::Includes do
-       let(:query) do
-         Metasploit::Model::Search::Query.new(
-             :formatted => formatted,
--            :klass => Mdm::Module::Instance
-+            :klass => klass
-         )
-       end
- 
--      context 'with description' do
--        let(:description) do
--          FactoryGirl.generate :metasploit_model_module_instance_description
--        end
--
--        let(:formatted) do
--          "description:\"#{description}\""
--        end
--
--        it { should be_empty }
--      end
--
--      context 'with disclosed_on' do
--        let(:disclosed_on) do
--          FactoryGirl.generate :metasploit_model_module_instance_disclosed_on
--        end
--
--        let(:formatted) do
--          "disclosed_on:\"#{disclosed_on}\""
--        end
--
--        it { should be_empty }
--      end
--
--      context 'with license' do
--        let(:license) do
--          FactoryGirl.generate :metasploit_model_module_instance_license
--        end
--
--        let(:formatted) do
--          "license:\"#{license}\""
--        end
--
--        it { should be_empty }
--      end
--
--      context 'with name' do
--        let(:name) do
--          FactoryGirl.generate :metasploit_model_module_instance_name
--        end
--
--        let(:formatted) do
--          "name:\"#{name}\""
--        end
--
--        it { should be_empty }
--      end
--
--      context 'with privileged' do
--        let(:privileged) do
--          FactoryGirl.generate :metasploit_model_module_instance_privileged
--        end
--
--        let(:formatted) do
--          "privileged:#{privileged}"
--        end
--
--        it { should be_empty }
--      end
--
--      context 'with stance' do
--        let(:stance) do
--          FactoryGirl.generate :metasploit_model_module_stance
--        end
--
--        let(:formatted) do
--          "stance:#{stance}"
--        end
--
--        it { should be_empty }
--      end
--
--      context 'with actions.name' do
--        let(:name) do
--          FactoryGirl.generate :metasploit_model_module_action_name
--        end
-+      context 'Metasploit::Model::Search::Query#klass' do
-+        context 'with Mdm::Host' do
-+          let(:klass) {
-+            Mdm::Host
-+          }
- 
--        let(:formatted) do
--          "actions.name:\"#{name}\""
--        end
--
--        it { should include :actions }
--      end
--
--      context 'with architectures.abbreviation' do
--        let(:abbreviation) do
--          FactoryGirl.generate :metasploit_model_architecture_abbreviation
--        end
-+          context 'with name' do
-+            let(:name) do
-+              FactoryGirl.generate :mdm_host_name
-+            end
- 
--        let(:formatted) do
--          "architectures.abbreviation:#{abbreviation}"
--        end
--
--        it { should include :architectures }
--      end
--
--      context 'with architectures.bits' do
--        let(:bits) do
--          FactoryGirl.generate :metasploit_model_architecture_bits
--        end
-+            let(:formatted) do
-+              "name:\"#{name}\""
-+            end
- 
--        let(:formatted) do
--          "architectures.bits:#{bits}"
--        end
--
--        it { should include :architectures }
--      end
--
--      context 'with architectures.endianness' do
--        let(:endianness) do
--          FactoryGirl.generate :metasploit_model_architecture_endianness
--        end
--
--        let(:formatted) do
--          "architectures.endianness:#{endianness}"
--        end
--
--        it { should include :architectures }
--      end
--
--      context 'with architectures.family' do
--        let(:family) do
--          FactoryGirl.generate :metasploit_model_architecture_family
--        end
--
--        let(:formatted) do
--          "architectures.family:#{family}"
--        end
--
--        it { should include :architectures }
--      end
--
--      context 'with authorities.abbreviation' do
--        let(:abbreviation) do
--          FactoryGirl.generate :metasploit_model_authority_abbreviation
--        end
--
--        let(:formatted) do
--          "authorities.abbreviation:#{abbreviation}"
--        end
--
--        it { should include :authorities }
--      end
--
--      context 'with authors.name' do
--        let(:name) do
--          FactoryGirl.generate :metasploit_model_author_name
--        end
--
--        let(:formatted) do
--          "authors.name:\"#{name}\""
--        end
--
--        it { should include :authors }
--      end
--
--      context 'with email_addresses.domain' do
--        let(:domain) do
--          FactoryGirl.generate :metasploit_model_email_address_domain
--        end
--
--        let(:formatted) do
--          "email_addresses.domain:#{domain}"
--        end
--
--        it { should include :email_addresses }
--      end
--
--      context 'with email_addresses.local' do
--        let(:local) do
--          FactoryGirl.generate :metasploit_model_email_address_local
--        end
--
--        let(:formatted) do
--          "email_addresses.local:#{local}"
--        end
--
--        it { should include :email_addresses }
--      end
--
--      context 'with module_class.full_name' do
--        let(:full_name) do
--          "#{module_type}/#{reference_name}"
--        end
--
--        let(:formatted) do
--          "module_class.full_name:#{full_name}"
--        end
--
--        let(:module_type) do
--          FactoryGirl.generate :metasploit_model_non_payload_module_type
--        end
--
--        let(:reference_name) do
--          FactoryGirl.generate :metasploit_model_module_ancestor_non_payload_reference_name
--        end
--
--        it { should include :module_class }
--      end
--
--      context 'with module_class.module_type' do
--        let(:formatted) do
--          "module_class.module_type:#{module_type}"
--        end
--
--        let(:module_type) do
--          FactoryGirl.generate :metasploit_model_module_type
--        end
--
--        it { should include :module_class }
--      end
--
--      context 'with module_class.payload_type' do
--        let(:formatted) do
--          "module_class.payload_type:#{payload_type}"
--        end
--
--        let(:payload_type) do
--          FactoryGirl.generate :metasploit_model_module_class_payload_type
--        end
--
--        it { should include :module_class }
--      end
--
--      context 'with module_class.reference_name' do
--        let(:formatted) do
--          "module_class.reference_name:#{reference_name}"
--        end
--
--        let(:reference_name) do
--          FactoryGirl.generate :metasploit_model_module_ancestor_reference_name
--        end
--
--        it { should include :module_class }
--      end
--
--      context 'with platforms.fully_qualified_name' do
--        let(:formatted) do
--          "platforms.fully_qualified_name:\"#{fully_qualified_name}\""
--        end
--
--        let(:fully_qualified_name) do
--          Metasploit::Model::Platform.fully_qualified_name_set.to_a.sample
--        end
--
--        it { should include :platforms }
--      end
--
--      context 'with rank.name' do
--        let(:formatted) do
--          "rank.name:#{name}"
--        end
--
--        let(:name) do
--          FactoryGirl.generate :metasploit_model_module_rank_name
--        end
--
--        it { should include :rank }
--      end
--
--      context 'with rank.number' do
--        let(:formatted) do
--          "rank.number:#{number}"
--        end
--
--        let(:number) do
--          FactoryGirl.generate :metasploit_model_module_rank_number
--        end
--
--        it { should include :rank }
--      end
--
--      context 'with references.designation' do
--        let(:designation) do
--          FactoryGirl.generate :metasploit_model_reference_designation
--        end
--
--        let(:formatted) do
--          "references.designation:#{designation}"
--        end
--
--        it { should include :references }
--      end
-+            it { should be_empty }
-+          end
- 
--      context 'with references.url' do
--        let(:formatted) do
--          "references.url:#{url}"
--        end
-+          context 'with services.name' do
-+            let(:name) do
-+              FactoryGirl.generate :mdm_service_name
-+            end
- 
--        let(:url) do
--          FactoryGirl.generate :metasploit_model_reference_url
--        end
--
--        it { should include :references }
--      end
-+            let(:formatted) do
-+              "services.name:\"#{name}\""
-+            end
- 
--      context 'with targets.name' do
--        let(:formatted) do
--          "targets.name:\"#{name}\""
--        end
--
--        let(:name) do
--          FactoryGirl.generate :metasploit_model_module_target_name
-+            it { should include :actions }
-+          end
-         end
--
--        it { should include :targets }
-       end
-     end
-   end
-```
+and rerun all the specs.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > rake spec
@@ -1029,140 +494,57 @@ NoMethodError: undefined method `search_operator_by_name' for #<Class:0x007f8658
 
 Ok, so I need to define the search operators using the search DSL on `Mdm::Host` and `Mdm::Service`
 
-```
-diff --git a/app/models/mdm/host.rb b/app/models/mdm/host.rb
-index a7939b1..474d0ec 100755
---- a/app/models/mdm/host.rb
-+++ b/app/models/mdm/host.rb
-@@ -1,6 +1,7 @@
- # A system with an {#address IP address} on the network that has been discovered in some way.
- class Mdm::Host < ActiveRecord::Base
-   include Mdm::Host::OperatingSystemNormalization
-+  include Metasploit::Model::Search
- 
-   #
-   # CONSTANTS
-@@ -462,6 +463,29 @@ class Mdm::Host < ActiveRecord::Base
-   scope :tag_search,
-         lambda { |*args| where("tags.name" => args[0]).includes(:tags) }
- 
-+  #
-+  #
-+  # Search
-+  #
-+  #
-+
-+  #
-+  # Search Associations
-+  #
-+
-+  search_association :services
-+
-+  #
-+  # Search Attributes
-+  #
-+
-+  search_attribute :name,
-+                   type: :string
-+
-+  #
-+  # Instance Methods
-+  #
-+
-   # Returns whether 'host.updated.<attr>' {#notes note} is {Mdm::Note#data locked}.
-   #
-   # @return [true] if Mdm::Note with 'host.updated.<attr>' as {Mdm::Note#name} exists and data[:locked] is `true`.
+```ruby
+class Mdm::Host
+  # ...
+  include Metasploit::Model::Search
+  # ...
+  
+  #
+  #
+  # Search
+  #
+  #
 
+  #
+  # Search Associations
+  #
 
-diff --git a/app/models/mdm/service.rb b/app/models/mdm/service.rb
-index 6bccb67..67193da 100755
---- a/app/models/mdm/service.rb
-+++ b/app/models/mdm/service.rb
-@@ -1,5 +1,7 @@
- # A service, such as an ssh server or web server, running on a {#host}.
- class Mdm::Service < ActiveRecord::Base
-+  include Metasploit::Model::Search
-+
-   #
-   # CONSTANTS
-   #
-@@ -175,6 +177,13 @@ class Mdm::Service < ActiveRecord::Base
-   }
- 
-   #
-+  # Search Attributes
-+  #
-+
-+  search_attribute :name,
-+                   type: :string
-+
-+  #
-   # Validations
-   #
-   validates :port,
+  search_association :services
+
+  #
+  # Search Attributes
+  #
+
+  search_attribute :name,
+                   type: :string
+  
+  # ...
+end
 ```
+
+```ruby
+class Mdm::Service
+  # ...
+  include Metasploit::Model::Search
+  # ...
+  
+  #
+  # Search Attributes
+  #
+
+  search_attribute :name,
+                   type: :string
+
+  # ...
+end
+```
+
 
 Now to test
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search) > rspec spec/app/models/metasploit_data_models/search/visitor/includes_spec.rb
-
-
-MetasploitDataModels::Search::Visitor::Includes
-  #visit
-    with Metasploit::Model::Search::Group::Union
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with #children
-        should return Array of all child visits
-        should visit each child
-    with Metasploit::Model::Search::Operation::Date
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with Metasploit::Model::Search::Operation::Base
-        should return operator visit
-        should visit operator
-    with Metasploit::Model::Search::Group::Intersection
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with #children
-        should return Array of all child visits
-        should visit each child
-    with Metasploit::Model::Search::Operation::Integer
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with Metasploit::Model::Search::Operation::Base
-        should return operator visit
-        should visit operator
-    with Metasploit::Model::Search::Operator::Attribute
-      should == []
-    with Metasploit::Model::Search::Operator::Association
-      should include association
-    with Metasploit::Model::Search::Operation::Set::String
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with Metasploit::Model::Search::Operation::Base
-        should return operator visit
-        should visit operator
-    with Metasploit::Model::Search::Operation::Set::Integer
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with Metasploit::Model::Search::Operation::Base
-        should return operator visit
-        should visit operator
-    with Metasploit::Model::Search::Query#tree
-      Metasploit::Model::Search::Query#klass
-        with Mdm::Host
-          with services.name
-            should include :services
-          with name
-            should be empty
-    with Metasploit::Model::Search::Operation::Null
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with Metasploit::Model::Search::Operation::Base
-        should return operator visit
-        should visit operator
-    with Metasploit::Model::Search::Operation::Union
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with #children
-        should return Array of all child visits
-        should visit each child
-    with Metasploit::Model::Search::Operation::String
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with Metasploit::Model::Search::Operation::Base
-        should return operator visit
-        should visit operator
-    with Metasploit::Model::Search::Operation::Boolean
-      it should behave like MetasploitDataModels::Search::Visitor::Includes#visit with Metasploit::Model::Search::Operation::Base
-        should return operator visit
-        should visit operator
-
-Finished in 0.08222 seconds
 24 examples, 0 failures
 ```
 
@@ -1190,7 +572,8 @@ A     spec/support/shared/examples/metasploit_data_models/search/visitor/where/v
 ```
 
 Unfortunately, when I opened the pull request, github showed redundant changes in the Changed Files tab.  This was
-because `feature/exploit` didn't have the current `master` as a parent, so merge it.
+because `feature/exploit` (the parent of `feature/MSP-10016/metasploit-data-models-search)` didn't have the current
+`HEAD` of `master` as a parent, so merge it.
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search)> git merge master
@@ -1204,13 +587,14 @@ Automatic merge failed; fix conflicts and then commit the result.
 ```
 
 The conflicts turned out to be trivial, so those are fixed, and now the diff only shows the expected changes, so `push`
-to github and check again and it worked.  Egypt pointed out that I can reproduce the Files Changed on github using
+to github and check again and it worked.  [Egypt](https://github.com/jlee-r7) pointed out that I can reproduce the
+Files Changed on github using
 
 ```sh
 (feature/MSP-10016/metasploit-data-models-search)> git diff --name-status master...
 ```
 
-Note the use of 3 '.' instead of 2.  The '..' (2 dots):
+Note the use of 3 '.' instead of 2.  From `git diff --help`. For '..' (2 dots):
 
        git diff [--options] <commit> <commit> [--] [<path>...]
            This is to view the changes between two arbitrary <commit>.
@@ -1221,13 +605,13 @@ Note the use of 3 '.' instead of 2.  The '..' (2 dots):
 
 While '...' (3 dots):
 
-   git diff [--options] <commit>...<commit> [--] [<path>...]
+       git diff [--options] <commit>...<commit> [--] [<path>...]
            This form is to view the changes on the branch containing and up to the second <commit>, starting at a common
            ancestor of both <commit>. "git diff A...B" is equivalent to "git diff $(git-merge-base A B) B". You can omit any
            one of <commit>, which has the same effect as using HEAD instead.
 
-As you'll note in the docs, it's equivalent to `git-merge-base`, which I just learned about now, so obviously when
-trying to check what the merge would look like we should use '...' because it uses the point from which a merge will be
+As you'll note in the docs, `...` is equivalent to `git-merge-base`, which I just learned about now, so obviously when
+trying to check what the merge would look like we should use `...` because it uses the point from which a merge will be
 calculated.
 
 The final [pull request](https://github.com/rapid7/metasploit_data_models/pull/59)
