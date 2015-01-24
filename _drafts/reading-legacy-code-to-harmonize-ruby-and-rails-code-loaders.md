@@ -489,8 +489,173 @@ Matching up the archived and unarchive methods we see that they follow a naming 
 
 This pattern of common methods with specialization for archive and directory that follow the same naming convention would indicate that a class hierarchy with the common methods in the base class and archive and directory as sibling subclasses would be ideal.  Since this will be transitioning the code from mixed in Modules in `Msf::ModuleManager` to two `Msf::Modules::Loader` classes, we'll also need to add code to instantiate the loaders and dispatch to the appropriate load based on whether the module is in an archive or directory.
 
+#### Separating `Msf::ModuleManager::Loading` and `Msf::Modules::Loader::Base`
+
 Let's read the common methods first to verify whether they should go in the new `Msf::Modules::Loader::Base` or stay in `Msf::ModuleManager::Loading` based on whether they are helping to load the module or updating the state of the `Msf::ModuleManager` based on a module being loaded.
 
 ![`Msf::ModuleManager::Loading#add_module`](/images/msf-module-manager-loading-add-module.png)
 
-The comments make references to the method being an override of `Msf::ModuleSet#add_module`, so the method should remain in `Msf::ModuleManager::Loading` and not move to `Msf::Modules::Loader::Base`.
+The comments make references to the method being an override of `Msf::ModuleSet#add_module`, so the method should remain in `Msf::ModuleManager::Loading` and not move to `Msf::Modules::Loader::Base`.  This also means that `#auto_subscribe_module` should stay in `Msf::ModuleManager::Loading` due to `#add_module`'s references to those methods.
+
+![`Msf::ModuleManager::Loading#demand_load_module`](/images/msf-module-manager-loading-demand-load-module.png)
+
+`#demand_load_module` calls `#load_module_from_file`, which would indicate that it should actually be grouped into the directory category, but this is actually a bug in the code where all features of the directory category were not mirrored to the archive category.  Instead of focusing on the called methods, let's use Find Usages to look at the callers of `#demand_load_module`.
+
+![`Msf::ModuleManager::Loading#demand_load_module` Find Usage](/images/msf-module-manager-loading-demand-load-module-find-usage.png)
+
+Since `#demand_load_module` is only used by `Msf::ModuleSet#create` and by calling it directly on `framework.modules`, which is an instance of `Msf::ModuleManager`, `#demand_load_module` should remain in `Msf::ModuleManager::Loading`.
+
+![`Msf::ModuleManager::Loading#failed`](/images/msf-module-manager-loading-failed.png)
+
+`#failed` just references the attribute `module_failed`, so use Find Usage to do caller analysis
+
+![`Msf::ModuleManager::Loading#failed`](/images/msf-module-manager-loading-failed-find-usage.png)
+
+Usage is distributed across the CLI for metasploit-framework, so `#failed` should remain directly accessible on `Msf::ModuleManager` to preserve the `framework.modules.failed` interface.
+
+![`Msf::ModuleManager::Loading#load_modules`](/images/msf-module-manager-loading-load-modules.png)
+
+`#load_modules` is the point where the code forks either into the archive or directory loading, so although `#load_modules` should remain `Msf::ModuleManager::Loading`, it needs to be rewritten to use instance of `Msf::Modules::Loader::Archive` and `Msf::Modules::Loader::Directory`.  `#load_modules` is also a form of delegating, so to make that more obvious, there should be a method on `Msf::Modules::Loader::Base#load_modules` that is specialized in `Msf::Modules::Loader::Archive` and `Msf::Modules::Loader::Directory`.  `.fastlib` is the extension for archives, so that's leaking information from `Msf::Modules::Loader::Archive`, so we can hide that information by asking each loader if it can handle the `bpath`.  In [the end](https://github.com/rapid7/metasploit-framework/blob/555a9f2559be56e44bba6ab01f88fe5648b7f58b/lib/msf/core/module_manager/loading.rb#L89-L111) the method will look like this:
+
+![`Msf::ModuleManager::Loading#load_modules` with loaders](/images/msf-module-manger-loading-load-modules-with-loaders.png)
+
+![`Msf::ModuleManager::Loading#on_module_load`](/images/msf-module-manager-loading-on-module-load.png)
+
+`#on_module_load` from its name appears to be a primitive callback and only deals with adding modules to either the `Msf::ModuleManager` or a module set, so it should stay in `Msf::ModuleManager::Loading` too.
+
+So, we didn't end up moving any of the common category methods out of `Msf::ModuleManager::Loading`, but it was still necessary when extracting a new class and it helped spot the `#load_modules` interface for `Msf::Modules::Loader::Base`.
+
+#### Separating `Msf::Modules::Loader::Base` from `Msf::Modules::Loader::Archive` and `Msf::Modules::Loader::Directory`
+
+My general approach for extracting superclasses is write the first class and then start writing the second class with all the copy and paste until you start spotting the redundances that can be pulled out into specialization in the subclasses. I'll start this process by following the call graph from `Msf::ModuleManager::Loading#load_modules` into the `#load_modules` for each loader.
+
+##### `#load_modules`
+
+`Msf::Modules::Loader::Archive#load_modules` is currently `Msf::ModuleManager::Loading#load_modules_from_archive` and `Msf::Modules::Loader::Directory#load_modules` is `Msf::ModuleManager::Loading#load_modules_from_file`.  Using split view, I can visually compare the two methods to find commonality
+
+![`Msf::ModuleManager::Loading#load_modules_from_archive` vs `Msf::ModuleManager::Loading#load_modules_from_directory`](/images/msf-module-manager-loading-load-modules-from-archive-vs-load-modules-from-directory.png)
+
+Here's the common pattern I extracted
+
+![`Msf::Modules::Loader::Base#load_modules`](/images/msf-modules-loader-base-load-modules.png)
+
+I moved everything before the call to `#load_module_from_archive` or `#load_module_from_file` out into `#each_module_reference_name`, which can deal with the path filters.  This allows the common features to be shared.  Unfortunately, due to the slight difference between Fastlib's paths and real filesystem paths, `Msf::Modules::Loader::Archive#each_module_reference_name` and `Msf::Modules::Loader::Directory#each_module_reference_name` are still very similar, but to pull out the commonalities would just make the code more confusing to read.
+
+![`Msf::Modules::Loader::Archive#each_module_reference_name` vs `Msf::Module::Loader::Directory#each_module_reference_name`](/images/msf-modules-loader-archive-vs-directory-each-module-reference-name.png)
+
+##### `#module_path?`
+
+![`Msf::Modules::Loader::Base#module_path?`](/images/msf-modules-loader-base-is-module-path.png)
+
+So, this covers the path filtering that was common to `#load_modules_from_archive` and `#load_modules_from_directory`:
+
+1. Hidden files
+2. Non-.rb files
+3. Unit test files
+
+You'll note I followed best practices by pulling literal strings and `Regexp` into constants.
+
+##### `#module_reference_name_from_path`
+
+![`Msf::Modules::Loader::Base#module_reference_name_from_path`](/images/msf-modules-loader-base-module-reference-name-from-path.png)
+
+This just strips the file extension from the path, but having a named method is clearer intent than using the `gsub` inline and also allows for sharing between the subclasses.
+
+##### `#load_module`
+
+Jumping out of `#each_module_reference_name` into `#load_modules`, each yielded `[parent_path, type, module_reference_name]` is passed to `#load_module`
+
+[![`Msf::Modules::Loader::Base#load_module`](/images/msf-modules-loader-base-load-module.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L81-L230)
+
+So, it's still huge (~130 lines), but the commonality between archive and directory is shared and the differences are extracted to `#module_path`, `#namespace_module_transaction`, and `#read_module_content`.
+
+##### `#module_path`
+
+![`Msf::Modules::Loader::Archive#module_path` vs `Msf::Module::Loader::Directory#module_path`](/images/msf-modules-loader-archive-vs-directory-module-path.png)
+
+`#module_path` has to handle that the path to a `.fastlib` archive and a path inside the `.fastlib` are indicated differently.
+
+##### `#read_module_content`
+
+![`Msf::Modules::Loader::Archive#read_module_content` vs `Msf::Module::Loader::Directory#read_module_content`](/images/msf-modules-loader-archive-vs-directory-read-module-content.png)
+
+This method abstracts over the difference between reading from a `.fastlib` and a normal file.
+
+##### `#namespace_module_transaction`
+
+Reloading a module can fail due to any `Exception` being encountered when evaluating the new source.  If an `exception` occurs, then the original version of the Metasploit Module `Class` or `Module` should be restored.  Removing the current namespace module, generating a new namespace module, and restoring the old namespace module on exception is handled by `#namespace_module_transaction`.
+
+[![`Msf::Modules::Loader::Base#namespace_module_transaction`](/images/msf-modules-loader-base-namespace-module-transaction.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L497-L538)
+
+##### `#current_module`
+
+`wrapper_module`'s constant lookup is moved to `#current_module`
+
+[![`Msf::Modules::Loader::Base#current_module`](/images/msf-modules-loader-base-current-module.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L367-L386)
+
+`Enumerable#inject` works by taking the `yieldreturn` from the block and passing it as `parent` to the next iteration of the block along with the next `module_name` from `module_names`.  If any module along the path is not defined, then `break` is called, which causes `inject` to terminate early and return `nil` instead of the current value of the block or the last `parent`.
+
+## When refactoring introduces you to lexical scope
+
+`wrapper_module`'s Module creation was extracted to `#create_module_namespace` and the built-in `Mdoule#module_eval` was replaced with `module_eval_with_lexical_scope`.
+
+[![`Msf::Module::Loader::Base#load_module` `module_eval_with_lexical_scope`](/images/msf-modules-loader-base-load-module-module-eval-with-lexical-scope.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L114-L123)
+
+The reason for this, is that refactoring into new modules and classes actually introduced a bug: the `Msf` module was lost from the lexical scope.  The loss of `Msf` in the lexical scope is an issue because there are modules (like `auxiliary/dos/ssl/dtls_changecipherspec`) that didn't fully-qualify their constants.
+
+![`auxiliary/dos/ssl/dtls_changecipherspec`](/images/auxiliary-dos-ssl-dtls-changecipherspec.png)
+
+There is no top-level `Exploit::Remote::Tcp`, but there is a `Msf::Exploit::Remote::Tcp`, so how is `include Exploit::Remote::Tcp` finding `Msf::Exploit::Remote::Tcp`?
+
+### Constant look-up in Ruby
+
+This is a slight digression to explain constant lookup in Ruby.  The following rules are applied in order:
+
+1. Look at the lexically scoped constants
+2. Look at the ancestors of the current `Module` or `Class`
+
+The tricky part comes in what counts as the lexical scope.  It turns out that the lexical scope is not as simple as listing the namespace modules.
+
+<script src="https://gist.github.com/limhoff-r7/2ab2aac4011cc047174f.js"></script>
+
+### Constant look-up when loading Metasploit Modules
+
+In the original `Msf::ModuleManager` that called `module_eval`, the lexical scope was `[Msf::ModuleManager, Msf]` because of the nested module declaration.
+
+![Nested module declarations for `Msf::ModuleManager`](/images/msf-module-manager-nested-modules.png)
+
+But, because I didn't want deeply indented code (or for the namespace modules to be defined in more than one file), I went with compact, unnested module declarations during the refactor:
+
+![Unnested module declarations for `Msf::Modules::Loader::Base`](/images/msf-modules-loader-base-unnested-modules.png)
+
+### Fixing constant look-up in `Msf::Modules::Loader::Base`
+
+I could have fixed the constant look-up by just changing to nested modules, but that would have indented all the code 3 more levels and made `Msf`, `Msf::Modules`, and `Msf::Modules::Loader` be defined in multiple files, and more likely to be loaded partially.  I also didn't think it wise that loaded Metasploit Modules were depending on the namespace (`Msf`) of the code loader, as this namespace could change since the project is called metasploit-framework and so by gem conventions should use the `Metasploit::Framework` namespace and not `Msf`.  This left me with the need to fake lexical scopes.  It turns out it's really hard to fake lexical scopes using just blocks, so I ended up having to use Strings with `module_eval` to construct the simulated lexical scope in a string and then call a method, `module_eval_with_lexical_scope` that was declared in that `String`, which calls `module_eval`.
+
+##### `namespace_modules_names`
+
+Escaping the `module_reference_name` was extracted to `namespace_module_names`.
+
+![`Msf::ModuleManager.wrapper_module` hex-encoding](/images/msf-module-manager-wrapper-module-hex-encoding.png) vs [![`Msf::Modules::Loader::Base#namespace_module_names`](/images/msf-modules-loader-base-namespace-module-names.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L464-L495)
+
+After the escaping, `NAMESPACE_MODULE_NAMES` is prefixed.  `NAMESPACE_MODULE_NAMES` is `['Msf', 'Modules']`.  The `'Msf'` as the first element of the namespace is the key to reintroducing the `Msf` into the lexical scope.
+
+#### `create_namespace_module`
+
+[![`Msf::Modules::Loader::Base#create_namespace_module`](/images/msf-modules-loader-base-create-namespace-module.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L328-L365)
+
+##### Nesting string Modules
+
+To build up a lexical scope, the code needs to wrap child modules in `module Parent ... end` blocks.  Instead of have to prepend `module Parent` to the front of a string and append `end` to the end of the a string, I reverse the `namespace_module_names` so I can build the inner `module`s first and then wrap them with the parent module like Russian nesting dolls.
+
+[![`Msf::Modules::Loader::Base#create_namespace_module` `namespace_module_content`](/images/msf-modules-loader-base-create-namespace-module-namespace-module-content.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L338-L353)
+
+To make nicer backtrace and allow for easier debugging, the code evaluates `namespace_module_content` by giving it's path as the current file and it's starting line as the first line of `NAMESPACE_MODULE_CONTENT`, but it needs to be adjusted for all the outer namespaces.
+
+[![`Msf::Modules::Loader::Base#create_namespace_module` `module_eval`](/images/msf-modules-loader-base-create-namespace-module-module-eval.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L355-L357)
+
+With the path and line correct we get the neat power to put break points in body of the `NAMESPACE_MODULE_CONTENT` string:
+
+<iframe width="560" height="315" src="//www.youtube.com/embed/blKRYmbpDas" frameborder="0" allowfullscreen>
+<!-- source for youtube video is in /videos/dbeugging-in-namespace-module-content.mov -->
+</iframe>
