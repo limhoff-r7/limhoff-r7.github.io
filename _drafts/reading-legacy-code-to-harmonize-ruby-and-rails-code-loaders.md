@@ -693,3 +693,7 @@ So, with this final version of the Metasploit Module loader, the Metasploit Pro'
   * Nesting `module` declaration has a different lexical scope than `::` separated names
   * The lexical scope can be retrieved with `Module.new`
 * Passing the path and line to `module_eval` allows debugging in string code.
+
+# Acknowledgements
+
+I'd like to thank [James "Egypt" Lee"](https://github.com/jlee-r7) for [imparting his knowledge of how to use the various msfconsole commands to ensure my changes didn't break anything](https://github.com/rapid7/metasploit-framework/pull/843), fixing my [lambda vs proc bug](https://github.com/rapid7/metasploit-framework/commit/3a572625f5d264fff38bb83c97a76167f45ccf04), and [Ruby 1.8-incompatibility](https://github.com/rapid7/metasploit-framework/commit/10dafcd09f2764b8b3e1239752a5b8654b795af4).  I'd like to thank [Samuel "Shuckins" Huckins](https://github.com/shuckins-r7) for [testing these changes against Metasploit Pro](https://github.com/rapid7/metasploit-framework/pull/843#issuecomment-9045438).  I'd like to thank [HD Moore](https://github.com/hmoore-r7) for [spotting](https://github.com/rapid7/metasploit-framework/commit/2dce6e63472a7594bf53a6793163cd7cb088d484) when I missed automatic namespace names colliding with real Modules. I'd like to thank [Trevor Rosen](https:/github.com/trosen-r7) for allowing me to spend weeks to fix this the right way.
