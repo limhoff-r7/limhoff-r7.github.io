@@ -54,7 +54,11 @@ end
 When `Parent::Child` is accessed for the first time, `parent/child` will be loaded.  In 1.9.3, this loading will happen once, but is not thread-safe; in 2.0+ this loading will happen once, but is thread-safe and can be thought of as just an on-use `require` as `autoload` uses the same VM lock as `require` in MRI Ruby 2.0+.
 
 ## Code-Loading in Rails
-Part of Rails' "Convention over Configuration", is that namespace Modules should correspond to directories while code Modules and Classes should correspond to files under the namespace directories.  When following this convention, you can use `ActiveSupport::Autoload` to remove the need to specify the path to `autoload`:
+Part of Rails' "Convention over Configuration", is that namespace Modules should correspond to directories while code Modules and Classes should correspond to files under the namespace directories.
+
+### `ActiveSupport::Autoload`
+
+When following this convention, you can use `ActiveSupport::Autoload` to remove the need to specify the path to `autoload`:
 
 ```ruby
 # lib/parent.rb
@@ -64,6 +68,8 @@ module Parent
   autoload :Child
 end
 ```
+
+### `ActiveSupport::Dependencies.autoload_paths`
 
 But, it turns out that this isn't the convention for Rails apps because `autoload`, like `require` loads a file once and then the file can't be reloaded, so Rails came up with `config.autoload_paths`, which configures `ActiveSupport::Dependencies.autoload_paths`.  `ActiveSupport::Dependencies.autoload_paths` has the benefit over autoload in that it can either use `load`, to allow reload, such as in development, when you don't want to have to restart your web server to see your code changes, or `require` in production when you want all your code loaded once so forks can share the memory.  `ActiveSupport::Dependencies.autoload_paths` also means you configure the autoload on an entire path and don't have to add `extend ActiveSupport::Autoload` and `autoload <child>` to each namespace Module, which removes more "Configuration" from your code thanks to using the Rails "Convention".  Even when using `require`, `ActiveSupport::Dependencies.autoload_paths` is not thread-safe because it uses `const_missing` to trigger the `require` and `const_missing` is not protected by the VM lock.
 
@@ -662,3 +668,28 @@ With the path and line correct we get the neat power to put break points in body
 <iframe width="560" height="315" src="//www.youtube.com/embed/blKRYmbpDas" frameborder="0" allowfullscreen>
 <!-- source for youtube video is in /videos/dbeugging-in-namespace-module-content.mov -->
 </iframe>
+
+# Review
+
+So, with this final version of the Metasploit Module loader, the Metasploit Pro's `prosvc` was able to use `ActiveSupport::Dependencies.autoload_paths` to load the same code as Metasploit Pro UI.  Loaded Metasploit Modules have assigned namespace names and the entire loading process is debuggable.  Let's review what we've covered.
+
+* There are 3 ways to load entire files in the Ruby standard library:
+  1. [`#load`](#load)
+  2. [`#require`](#require)
+  3. [`#autoload`](#autoload)
+* There are 2 ways to load entire files in ActiveSupport:
+  1. [`ActiveSupport::Autoload`](#activesupportautoload)
+  2. [`ActiveSupport::Dependencies.autoload_paths`](#activesupportdependenciesautoloadpaths)
+* `Module.new` creates anonymous modules
+  * They get a `Module#name` when a constant is set to the `Module`
+  * They break `ActiveSupport::Dependencies`'s `const_missing`
+* When files are too big they can be broken up
+  * Ensure there is one `Class` or `Module` per file
+  * Group related methods into `include`d `Module`s
+  * Break up hierarchies of methods into `Class` hierarchies
+* Parts of files or entire files can be loaded by `module_eval`
+  * `module_eval` captures the lexical scope
+* Lexical scope influences constant look-up
+  * Nesting `module` declaration has a different lexical scope than `::` separated names
+  * The lexical scope can be retrieved with `Module.new`
+* Passing the path and line to `module_eval` allows debugging in string code.
