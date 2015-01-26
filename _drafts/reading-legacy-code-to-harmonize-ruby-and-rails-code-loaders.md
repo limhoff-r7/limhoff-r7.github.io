@@ -103,7 +103,7 @@ From the the [configuring guide for Rails 3.2.2](http://guides.rubyonrails.org/v
 
 ![set_autoload_paths](/images/configuring-set_autoload_paths.png)
 
-I know Rails depends on a bunch of gems like `active_support` and `active_record`, so I'm not sure which gem contains the initializers, so I go to [https://rubygems.org and search for `rails`](https://rubygems.org/search?query=rails).  On [the `rails` page](https://rubygems.org/gems/rails) I click [`Show all versions`](https://rubygems.org/gems/rails/versions).  And search for `3.2.8`.  On the page for [`3.2.8`](https://rubygems.org/gems/rails/versions/3.2.8).  Here's what I know about the depenencies:
+I know Rails depends on a bunch of gems like `active_support` and `active_record`, so I'm not sure which gem contains the initializers, so I go to [https://rubygems.org and search for `rails`](https://rubygems.org/search?query=rails).  On [the `rails` page](https://rubygems.org/gems/rails) I click [`Show all versions`](https://rubygems.org/gems/rails/versions).  And search for `3.2.2`.  On the page for [`3.2.2`](https://rubygems.org/gems/rails/versions/3.2.2).  Here's what I know about the depenencies:
 
 | Gem            | Purpose               |
 |----------------|-----------------------|
