@@ -144,6 +144,8 @@ I see only 2 results
 
 I see `ActiveSupport::Dependencies.autoload_paths` being added to with `unshift`, but I don't see `config.autoload_paths` being read except for the `config.autoload_paths.freeze` on line 541, so I Cmd+Click `_all_autoload_paths` to see it's definition.
 
+![all_autoload_paths](/images/all_autoload_paths.png)
+
 `_all_autoload_paths` is just the combination of `config.autoload_paths`, `config.eager_load_paths`, and `config.autoload_once_paths`, so if all I care about is emulating `set_autoload_paths` is I need to do `ActiveSupport::Dependencies.autoload_paths.unshift(config.autoload_paths)`, which is what I ended up doing in the [PR](https://github.com/rapid7/pro/blob/841f0d7c38d9fbb99ea8df742d15f07d32e55e3f/engine/lib/metasploit/configured.rb#L58).  Looking at the other lines in `set_autoload_paths`, I'll want to [`freeze` my paths to prevent future modifications](https://github.com/rapid7/pro/blob/841f0d7c38d9fbb99ea8df742d15f07d32e55e3f/engine/lib/metasploit/configured.rb#L60-L61).
 
 ### Emulating initializers without `Rails::Engine`
