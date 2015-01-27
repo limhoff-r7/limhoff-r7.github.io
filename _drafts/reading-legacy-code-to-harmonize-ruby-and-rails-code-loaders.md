@@ -482,7 +482,7 @@ This leaves just the loading category for [`Msf::ModuleManager::Loading`](https:
 Let's apply name pattern grouping again:
 
 * file_changed? (`#has_archive_file_changed?`, `#has_module_file_changed?`)
-* load_module (``#add_module`, `#auto_subscribe_module`, `#demand_load_module`, `#failed`, `#load_module_from_archive`, `#load_module_from_file`, `#load_module_source`, `#on_module_load`)
+* load_module (`#add_module`, `#auto_subscribe_module`, `#demand_load_module`, `#failed`, `#load_module_from_archive`, `#load_module_from_file`, `#load_module_source`, `#on_module_load`)
 * load_modules (`#load_modules`, `#load_modules_from_archive`, `#load_modules_from_directory`)
 
 Look at the categories, there's another way to group the methods:
