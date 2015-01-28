@@ -608,7 +608,7 @@ Reloading a module can fail due to any `Exception` being encountered when evalua
 
 ## When refactoring introduces you to lexical scope
 
-`wrapper_module`'s Module creation was extracted to `#create_module_namespace` and the built-in `Mdoule#module_eval` was replaced with `module_eval_with_lexical_scope`.
+`wrapper_module`'s Module creation was extracted to `#create_module_namespace` and the built-in `Module#module_eval` was replaced with `module_eval_with_lexical_scope`.
 
 [![`Msf::Module::Loader::Base#load_module` `module_eval_with_lexical_scope`](/images/msf-modules-loader-base-load-module-module-eval-with-lexical-scope.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L114-L123)
 
