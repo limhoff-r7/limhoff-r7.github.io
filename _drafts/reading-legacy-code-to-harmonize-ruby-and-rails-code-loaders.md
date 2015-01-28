@@ -99,11 +99,11 @@ were shared between the UI and prosvc.  This duplicative, but different way of l
 
 To harmonizing the code loading process between UI and prosvc, I wanted to set `config.autoload_paths`, in prosvc, but without a full Rails application since prosvc wasn't a Rails application.
 
-From the [configuring guide for Rails 3.2.2](http://guides.rubyonrails.org/v3.2.2/configuring.html), which was the version of Rails used by Metasploit Pro at the time, I know `config.autoload_paths` are added to `ActiveSupport::Dependencies.autoload_paths` in the `set_autoload_paths` initializer, but from the guide, I don't know where `set_autoload_paths` is so I can look at it's source to see if I can use the initializer without Rails or copy what it's doing to work with just ActiveSupport.
+From the [configuring guide for Rails 3.2.2](http://guides.rubyonrails.org/v3.2.2/configuring.html), which was the version of Rails used by Metasploit Pro at the time, I knew `config.autoload_paths` were added to `ActiveSupport::Dependencies.autoload_paths` in the `set_autoload_paths` initializer, but from the guide, I didn't know where `set_autoload_paths` is, so I had to look at it's source to see if I could use the initializer without Rails or copy what it's doing to work with just `ActiveSupport`.
 
 ![set_autoload_paths](/images/configuring-set_autoload_paths.png)
 
-I know Rails depends on a bunch of gems like `active_support` and `active_record`, so I'm not sure which gem contains the initializers, so I go to [https://rubygems.org and search for `rails`](https://rubygems.org/search?query=rails).  On [the `rails` page](https://rubygems.org/gems/rails) I click [`Show all versions`](https://rubygems.org/gems/rails/versions).  And search for `3.2.2`.  On the page for [`3.2.2`](https://rubygems.org/gems/rails/versions/3.2.2).  Here's what I know about the depenencies:
+I knew Rails depended on a bunch of gems like `active_support` and `active_record`, but I wasn't sure which gem contained the initializers, so I went to [https://rubygems.org and search for `rails`](https://rubygems.org/search?query=rails).  On [the `rails` page](https://rubygems.org/gems/rails) I clicked [`Show all versions`](https://rubygems.org/gems/rails/versions).  And searched for `3.2.2`.  On the page for [`3.2.2`](https://rubygems.org/gems/rails/versions/3.2.2).  Here's what I knew about the dependencies:
 
 | Gem            | Purpose               |
 |----------------|-----------------------|
@@ -115,7 +115,7 @@ I know Rails depends on a bunch of gems like `active_support` and `active_record
 | activesupport  | ?                     |
 | railties       | ?                     |
 
-This leaves `actionpack`, `activesupport`, or `railties` as the location of `set_autoload_paths`. I need to look at and search the source, but the rubygems pages for `actionpack`, `activesupport`, and `railties` has no "Source Code" link, so I go back to the rails gem page and click its "Source Code" link (https://github.com/rails/rails).  Looking at the directory listing, I see directories for `actionpack`, `activesupport`, and `railties`, so I assume that all the gems just houses in this same repository.  I need to search against a specific tag of the repository and not how the code looks in master, so I clone the repo to search locally
+This left `actionpack`, `activesupport`, or `railties` as the location of `set_autoload_paths`. I needed to look at and search the source, but the rubygems pages for `actionpack`, `activesupport`, and `railties` had no "Source Code" link, so I went back to the rails gem page and clicked its ["Source Code" link](https://github.com/rails/rails).  Looking at the directory listing, I saw directories for `actionpack`, `activesupport`, and `railties`, so I assumed that all the gems were just housed in this same repository.  I needed to search against a specific tag of the repository and not how the code looks in master, so I cloned the repo to search locally
 
 ```sh
 cd ~/git
@@ -125,18 +125,18 @@ git clone git@github.com:rails/rails.git
 cd rails
 ```
 
-I search for `set_autoload_path` using `ack`, which is a nicer alternative to `grep`:
+I searched for `set_autoload_path` using `ack`, which is a nicer alternative to `grep`:
 
 ```sh
 git checkout v3.2.2
 ack set_autoload_paths
 ```
 
-I see only 2 results
+I saw only 2 results
 
 ![ack set_autoload_paths](/images/ack-set_autoload_paths.png)
 
-`railties/lib/rails/engine.rb` line 536 looks like a DSL call for setting up an initializer, so I open `~/git/rails/rails/railties` in Rubymine to take advantage of its ability to jump from definition and usage easier than vim.  I do Shift+Shift and type `engine.rb` and hit enter to open the file.  I do `:536` to jump to line `536` because I use IDEAVim to have vim bindings in Rubymine.
+`railties/lib/rails/engine.rb` line 536 looks like a DSL call for setting up an initializer, so I opened `~/git/rails/rails/railties` in Rubymine to take advantage of its ability to jump from definition and usage easier than vim.  I did Shift+Shift and typed `engine.rb` and hit enter to open the file.  I did `:536` to jump to line `536` because I use IDEAVim to have vim bindings in Rubymine.
 
 ![railties/lib/rails/engine.rb:536](/images/railties-lib-rails-engine-line-536.png)
 
