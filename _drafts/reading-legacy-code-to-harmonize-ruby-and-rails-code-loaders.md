@@ -690,7 +690,7 @@ So, with this final version of the Metasploit Module loader, the Metasploit Pro'
   * Group related methods into `include`d `Module`s
   * Break up hierarchies of methods into `Class` hierarchies
 * Parts of files or entire files can be loaded by `module_eval`
-  * `module_eval` captures the lexical scope
+  * `module_eval` captures the lexical scope only with String
 * Lexical scope influences constant look-up
   * Nesting `module` declaration has a different lexical scope than `::` separated names
   * The lexical scope can be retrieved with `Module.new`
