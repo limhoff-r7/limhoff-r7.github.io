@@ -99,7 +99,7 @@ were shared between the UI and prosvc.  This duplicative, but different way of l
 
 To harmonizing the code loading process between UI and prosvc, I wanted to set `config.autoload_paths`, in prosvc, but without a full Rails application since prosvc wasn't a Rails application.
 
-From the the [configuring guide for Rails 3.2.2](http://guides.rubyonrails.org/v3.2.2/configuring.html), which was the version of Rails used by Metasploit Pro at the time, I know `config.autoload_paths` are added to `ActiveSupport::Dependencies.autoload_paths` in the `set_autoload_paths` initializer, but from the guide, I don't know where `set_autoload_paths` is so I can look at it's source to see if I can use the initializer without Rails or copy what it's doing to work with just ActiveSupport.
+From the [configuring guide for Rails 3.2.2](http://guides.rubyonrails.org/v3.2.2/configuring.html), which was the version of Rails used by Metasploit Pro at the time, I know `config.autoload_paths` are added to `ActiveSupport::Dependencies.autoload_paths` in the `set_autoload_paths` initializer, but from the guide, I don't know where `set_autoload_paths` is so I can look at it's source to see if I can use the initializer without Rails or copy what it's doing to work with just ActiveSupport.
 
 ![set_autoload_paths](/images/configuring-set_autoload_paths.png)
 
