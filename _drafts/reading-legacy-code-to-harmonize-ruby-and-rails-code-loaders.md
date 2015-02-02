@@ -266,7 +266,7 @@ edit Gemfile
 RAILS_ENV=development bundle install
 {% endhighlight %}
 
-So, everything loads using autoload paths and Metasploit Pro developers no longer have to worry about forgetting to adding requires to prosvc to shared code between `ui` and `engine`, right? Trigger the need to autoload `SocialEngineering` using autoload_paths by removing the constant and then trying to use web_phish module that references `SocialEngineering::Campaign`.  Nope, I get "wrong constant name" when trying to load certain modules for the searching:
+So, everything loads using autoload paths and Metasploit Pro developers no longer have to worry about forgetting to add `require`s to prosvc to shared code between `ui` and `engine`, right? Trigger the need to autoload `SocialEngineering` using `autoload_paths` by removing the constant and then trying to use `web_phish` module that references `SocialEngineering::Campaign`.  Nope, I get "wrong constant name" when trying to load certain modules for the searching:
 
 ![wrong constant name](/images/wrong-constant-name.png)
 
