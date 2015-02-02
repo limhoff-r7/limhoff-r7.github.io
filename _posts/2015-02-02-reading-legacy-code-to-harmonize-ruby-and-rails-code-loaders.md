@@ -706,6 +706,9 @@ I'd like to thank [James "egypt" Lee](https://github.com/jlee-r7) for [imparting
 
 # Links
 
+* Article
+  * [Readable](https://limhoff-r7.github.io/metasploit-framework/austin.rb/2015/02/02/reading-legacy-code-to-harmonize-ruby-and-rails-code-loaders/)
+  * [Source](https://github.com/limhoff-r7/limhoff-r7.github.io)
 * Presentation
   * [Interactive](https://limhoff-r7.github.io/reading-legacy-code-to-harmonize-ruby-and-rails-code-loaders)
   * [Source](https://github.com/limhoff-r7/reading-legacy-code-to-harmonize-ruby-and-rails-code-loaders)
