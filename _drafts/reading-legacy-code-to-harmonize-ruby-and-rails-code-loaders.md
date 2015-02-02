@@ -154,7 +154,7 @@ I see `ActiveSupport::Dependencies.autoload_paths` being added to with `unshift`
 
 ### Emulating initializers without `Rails::Engine`
 
-So, that's take care of what my `set_autoload_paths` should do, but how am I going to get prosvc to do it without `Rails::Engine`?  I need to look more at how `Rails::Engine`s works to see which pieces I should copy to mimic its path handling from boot to set_autoload_paths.  I know that initializers are run in the order they are defined except where `:before` or `:after` would override that order from [the configuring guide](http://guides.rubyonrails.org/v3.2.2/configuring.html#rails-railtie-initializer).
+So, that takes care of what my `set_autoload_paths` should do, but how am I going to get prosvc to do it without `Rails::Engine`?  I need to look more at how `Rails::Engine`s works to see which pieces I should copy to mimic its path handling from boot to set_autoload_paths.  I know that initializers are run in the order they are defined except where `:before` or `:after` would override that order from [the configuring guide](http://guides.rubyonrails.org/v3.2.2/configuring.html#rails-railtie-initializer).
 
 ![configuring-rails-railtie-initializer](/images/configuring-rails-railtie-initializer.png)
 
