@@ -29,7 +29,7 @@ All three search for files in the load path, which is an array of String represe
 
 ### `load`
 
-`load` is the lowest level of the code loading methods.  It will resolve relative paths in `$LOAD_PATH`, but it won't automatically add on the `.rb` extension for you (or `.dll`, `.so`, or `.dylib` for C extensions).  `load` will also reload files that have already been loaded, which is a good thing if you want to reload code in development, but a bad thing if you're trying to be efficient when starting up a slow application that has multiple ways for a file to be required.
+`load` is the lowest level of the code loading methods.  It will resolve relative paths in `$LOAD_PATH`, but it won't automatically add on the `.rb` extension for you (or `.dll`, `.so`, or `.dylib` for C extensions).  `load` will also reload files that have already been loaded, which is a good thing if you want to reload code in development but a bad thing if you're trying to be efficient when starting up a slow application that has multiple ways for a file to be required.
 
 ### `require`
 
