@@ -369,7 +369,7 @@ Because this now gives us a hierarchy of namespace modules, we need to ensure th
 
 ![`Msf::ModuleManager.wrapper_module` `until` loop](/images/msf-module-manager-wrapper-module-until.png)
 
-First, why am I starting with `Object` as the parent?  Well, it's because constant resolution all start with `Object.get_const`, which I got from `ModuleConstMissing#const_missing` (https://github.com/rails/rails/blob/v3.2.2/activesupport/lib/active_support/dependencies.rb#L176)
+First, why am I starting with `Object` as the parent?  Well, it's because constant resolution always starts with `Object.get_const`, which I got from `ModuleConstMissing#const_missing` (https://github.com/rails/rails/blob/v3.2.2/activesupport/lib/active_support/dependencies.rb#L176)
 
 ![`ModuleConstMissing#const_missing` using `Object` as constant resolution root](/images/module-const-missing-const-missing-object.png)
 
