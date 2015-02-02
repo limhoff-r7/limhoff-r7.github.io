@@ -41,7 +41,7 @@ Related to `require`, `require_relative` ignores `$LOAD_PATH` and instead uses `
 
 ### `autoload`
 
-`load` and `require` both have the downside that as soon as they are encountered, they load the code, which means you have to wait for all the libraries you might use, but may not use for a given run of your program, to load.  If you want to only load the code you actually use, you can use `autoload`, which takes a relative constant name, that is, a Class or Module name and the path to the file to load to define that constant:
+`load` and `require` both have a downside: as soon as they are encountered, they load the code. This means you have to wait for all the libraries you might use, even if they're not used for a given run of your program.  If you want to only load the code you actually use, use `autoload`. It takes a relative constant name, such as a Class or Module name, and the path of the file to load:
 
 ```ruby
 # lib/parent.rb
@@ -54,7 +54,8 @@ module Parent::Child
 end
 ```
 
-When `Parent::Child` is accessed for the first time, `parent/child` will be loaded.  In 1.9.3, this loading will happen once, but is not thread-safe; in 2.0+ this loading will happen once, but is thread-safe and can be thought of as just an on-use `require` as `autoload` uses the same VM lock as `require` in MRI Ruby 2.0+.
+When `Parent::Child` is accessed for the first time, `parent/child` will be loaded.  In Ruby 1.9.3, this loading will happen once but is not thread-safe; in Ruby 2.0+ this loading will happen once but *is*
+ thread-safe and can be thought of as just an on-use `require` as `autoload` uses the same VM lock as `require` in MRI Ruby 2.0+.
 
 ## Code-Loading in Rails
 Part of Rails' "Convention over Configuration", is that namespace Modules should correspond to directories while code Modules and Classes should correspond to files under the namespace directories.
