@@ -350,7 +350,7 @@ Huh, so `Msf::ModuleManager#load_module_from_file` and `Msf::ModuleManager#load_
 
 The minimal change I can make to `Msf::ModuleManager#load_module_from_file` is that I replace the direct call to `Module.new` with a method that returns a named Module instead.  Here's the constraint this new method must fulfill from the code we've seen:
 
-1. The name must be unique, so that it prevent naming collision
+1. The name must be unique, so that it prevents naming collision
 2. It needs to support reloading modules, so the name needs to be deterministic so that it can be replaced
 
 Let's look at [the method I came up with](https://github.com/rapid7/metasploit-framework/blob/8a2dc0a09fbe4ed9880b515d36df751042b09d57/lib/msf/core/module_manager.rb#L1128-L1185)
