@@ -379,7 +379,7 @@ There are some slight complications that were encountered that weren't in the or
 
 ![`Msf::ModuleManager.wrapper_module` hex-encoding](/images/msf-module-manager-wrapper-module-hex-encoding.png)
 
-Module reloading is handled by removing the leaf constant if it already exist when the loop gets to it (`module_names.empty?` is `true`).    `false` is passed to `const_defined?` to speed constant lookup and to prevent false positives from constants defined in ancestors.
+Module reloading is handled by removing the leaf constant if it already exists when the loop gets to it (`module_names.empty?` is `true`).    `false` is passed to `const_defined?` to speed constant lookup and to prevent false positives from constants defined in ancestors.
 
 ![`Msf::ModuleManager.wrapper_module` leaf-removal](/images/msf-module-manager-wrapper-module-leaf-removal.png)
 
