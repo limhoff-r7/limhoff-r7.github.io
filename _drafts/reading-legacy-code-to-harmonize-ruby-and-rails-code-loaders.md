@@ -33,7 +33,7 @@ All three search for files in the load path, which is an array of String represe
 
 ### `require`
 
-`require` is a little higher level than `load`.  It will automatically add on the `.rb` extension and any extensions your system uses for C extension like `.dll` on Windows, `.so` on Linux, or `.dylib` on OS X.  This has the benefit of your code not needing to know whether you're using a pure Ruby library with a `.rb` extension or C extension library with an different extension.  This power of `require` is what allows you to use C-extension gems in your bundle without having to change all your requires.  `require` also has the nice benefit that it's thread-safe due a lock used in the Ruby VM while `load` is not thread-safe.
+`require` is a little higher level than `load`.  It will automatically add the `.rb` extension and any extensions your system uses for the C language like `.dll` on Windows, `.so` on Linux, or `.dylib` on OS X.  This has the benefit of your code not needing to know whether you're using a pure Ruby library with a `.rb` extension or C extension library with an different extension.  This power of `require` is what allows you to use C-extension gems in your bundle without having to change all your `require` statements.  `require` also has the nice benefit that it's thread-safe due a lock used in the Ruby VM while `load` is not thread-safe.
 
 #### `require_relative`
 
