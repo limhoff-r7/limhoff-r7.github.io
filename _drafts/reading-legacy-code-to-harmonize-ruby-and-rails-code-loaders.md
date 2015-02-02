@@ -348,7 +348,7 @@ Huh, so `Msf::ModuleManager#load_module_from_file` and `Msf::ModuleManager#load_
 
 ### De-anonymizing namespace Modules
 
-The minimal change I can make to `Msf::ModuleManager#load_module_from_file` is that I replace the direct call to `Module.new` with a method that returns an named Module instead.  Here's the constraint this new method must fulfill from the code we've seen:
+The minimal change I can make to `Msf::ModuleManager#load_module_from_file` is that I replace the direct call to `Module.new` with a method that returns a named Module instead.  Here's the constraint this new method must fulfill from the code we've seen:
 
 1. The name must be unique, so that it prevent naming collision
 2. It needs to support reloading modules, so the name needs to be deterministic so that it can be replaced
