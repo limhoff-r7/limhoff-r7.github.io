@@ -332,7 +332,7 @@ So, however `use` loads the Metasploit Module, it must introduce an anonymous Mo
 
 ![`Module.new` in `metasploit-framework/lib`](/images/module-new-in-metasploit-framework-lib.png)
 
-If I was declaring an anonymous `Module` to wrap something, `wrap` would be a good name, so let's look at each of those.
+If I were declaring an anonymous `Module` to wrap something, `wrap` would be a good name, so let's look at each of those.
 
 ![`Module.new` in `Msf::ModuleManager#reload_module`](/images/module-new-in-msf-module-manager-reload-module.png)
 
