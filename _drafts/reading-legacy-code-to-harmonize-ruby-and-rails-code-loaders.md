@@ -95,7 +95,7 @@ In August 2012, metasploit-framework was 9 years old with 5 years in Ruby.  The 
 When developing Rails application, it is convention to skip explicit requires or even to use `Kernel.autoload` and instead use `config.autoload_paths` to load `app/models` and it's a common "house rule" to also add `lib` to `config.autoload_paths`.  Since Rails convention maps namespaces to directories and Modules/Classes to file names under those namespace directories, the project layout convention meshes with `config.autoload_paths` to eliminate the need for predictable require paths.  `config.autoload_paths` also is what allows for code reloading in development mode.
 
 The Metasploit Rails application (Metasploit Pro) was composed of a Rails application (UI) that automatically had access to the Rails autoload_paths and a non-Rails background process, prosvc ("pro service"), which had to manually load all the models and libraries that
-were shared between the UI and prosvc.  This duplicative, but different way of loading code had led to missing explicit requires in prosvc. Additionally, the requires were [very messy](https://github.com/rapid7/pro/commit/3370204851ac2d93ba2b3816b3762350799c21df#diff-8) due to the selective nature of there requires.  The requires were selective to speed up load times in prosvc, which already took over a minute to boot.
+were shared between the UI and prosvc.  This duplicative, but different way of loading code had led to missing explicit requires in prosvc. Additionally, the requires were very messy due to the selective nature of there requires.  The requires were selective to speed up load times in prosvc, which already took over a minute to boot.
 
 # Methods
 
@@ -150,7 +150,7 @@ I see `ActiveSupport::Dependencies.autoload_paths` being added to with `unshift`
 
 ![all_autoload_paths](/images/all_autoload_paths.png)
 
-`_all_autoload_paths` is just the combination of `config.autoload_paths`, `config.eager_load_paths`, and `config.autoload_once_paths`, so if all I care about is emulating `set_autoload_paths` is I need to do `ActiveSupport::Dependencies.autoload_paths.unshift(config.autoload_paths)`, which is what I ended up doing in the [PR](https://github.com/rapid7/pro/blob/841f0d7c38d9fbb99ea8df742d15f07d32e55e3f/engine/lib/metasploit/configured.rb#L58).  Looking at the other lines in `set_autoload_paths`, I'll want to [`freeze` my paths to prevent future modifications](https://github.com/rapid7/pro/blob/841f0d7c38d9fbb99ea8df742d15f07d32e55e3f/engine/lib/metasploit/configured.rb#L60-L61).
+`_all_autoload_paths` is just the combination of `config.autoload_paths`, `config.eager_load_paths`, and `config.autoload_once_paths`, so if all I care about is emulating `set_autoload_paths` is I need to do `ActiveSupport::Dependencies.autoload_paths.unshift(config.autoload_paths)`, which is what I ended up doing in the PR.  Looking at the other lines in `set_autoload_paths`, I'll want to `freeze` my paths to prevent future modifications.
 
 ### Emulating initializers without `Rails::Engine`
 
@@ -166,19 +166,19 @@ From the naming scheme, I'd assume that `_all_load_paths` is a superset of `_all
 
 ![all_load_paths](/images/all_load_paths.png)
 
-So, `_all_load_paths` → `_all_autoload_paths`, which means that any autoload path must be added as a normal load path and I should port `set_load_paths` in addition to `set_autoload_paths`.  I can ignore `config.paths.load_paths` because from the current prosvc, I know I only want to [load `lib`, `app/models`, and `app/uploaders` from `pro/ui`](https://github.com/rapid7/pro/commit/3370204851ac2d93ba2b3816b3762350799c21df#diff-8).
+So, `_all_load_paths` → `_all_autoload_paths`, which means that any autoload path must be added as a normal load path and I should port `set_load_paths` in addition to `set_autoload_paths`.  I can ignore `config.paths.load_paths` because from the current prosvc, I know I only want to load `lib`, `app/models`, and `app/uploaders` from `pro/ui`.
 
 ![engine/prosvc.rb diff](/images/3370204851ac2d93ba2b3816b3762350799c21df-engine-prosvc-diff.png)
 
 ### Separating initializers and configuration
 
-Looking at the structure for the Rails code, I can see that the initializers are kept in `Rails::Engine`, which can be used across all engines, while the customization of the paths is in `Rails::Engine::Configuration`, so I adopt a similar pattern, with [`Metasploit::Configured`](https://github.com/rapid7/pro/commit/3370204851ac2d93ba2b3816b3762350799c21df#diff-1) being equivalent to `Rails::Engine` and [`Metasploit::Configuration`](https://github.com/rapid7/pro/commit/3370204851ac2d93ba2b3816b3762350799c21df#diff-0) being equivalent to `Rails::Engine::Configuration`.
+Looking at the structure for the Rails code, I can see that the initializers are kept in `Rails::Engine`, which can be used across all engines, while the customization of the paths is in `Rails::Engine::Configuration`, so I adopt a similar pattern, with `Metasploit::Configured` being equivalent to `Rails::Engine` and `Metasploit::Configuration` being equivalent to `Rails::Engine::Configuration`.
 
 <script src="https://gist.github.com/limhoff-r7/7f1d17bcc8401ca38201.js"></script>
 
 With the structure derived from rails, I now need to apply it to the paths being used by `prosvc`.
 
-Looking at the [`require`s in `prosvc`](https://github.com/rapid7/pro/blob/70be8921c08abbf54810ce654d0672c51a3e8ab4/engine/prosvc.rb#L6-L213)
+Looking at the `require`s in `prosvc`
 
 <script src="https://gist.github.com/limhoff-r7/837acc3cdc6fce43b954.js"></script>
 
@@ -188,7 +188,7 @@ I can see there are 3 roots from which files are being loaded: `msf3`, which is 
 
 <script src="https://gist.github.com/limhoff-r7/1fa689e472bcf5a539f6.js"></script>
 
-[`Metasploit::Framework::Configuration`](https://github.com/rapid7/pro/commit/3370204851ac2d93ba2b3816b3762350799c21df#diff-3) sets up `msf3/lib` and `msf3/lib/base` as autoload paths.  [`Metasploit::Pro::Engine::Configuration`](https://github.com/rapid7/pro/commit/3370204851ac2d93ba2b3816b3762350799c21df#diff-5) sets up `engine/lib` as an autoload path.  [`Metasploit::Pro::UI::Configuration`](https://github.com/rapid7/pro/commit/3370204851ac2d93ba2b3816b3762350799c21df#diff-7) sets up `ui/lib`, `ui/app/controllers`, `ui/app/uploaders`, and `ui/app/models` as autoload paths.
+`Metasploit::Framework::Configuration` sets up `msf3/lib` and `msf3/lib/base` as autoload paths.  `Metasploit::Pro::Engine::Configuration` sets up `engine/lib` as an autoload path.  `Metasploit::Pro::UI::Configuration` sets up `ui/lib`, `ui/app/controllers`, `ui/app/uploaders`, and `ui/app/models` as autoload paths.
 
 ### Testing with Metasploit Module Loader
 
@@ -286,7 +286,7 @@ The next method is  [`ModuleConstMissing#const_missing`](https://github.com/rail
 
 ![`ModuleConstMissing#const_missing`](/images/module-const-missing-const-missing.png)
 
-From line 192, we now know that the `camel_case_word` argument in `ActiveSupport::Inspect#constantize` is the `namespace` local here in `ModuleConstMissing#const_missing`.  `namespace` is an element of [`nesting`](https://github.com/rails/rails/blob/v3.2.2/activesupport/lib/active_support/dependencies.rb#L190).  `nesting` could either be [passed in](https://github.com/rails/rails/blob/v3.2.2/activesupport/lib/active_support/dependencies.rb#L175) or [derived from `klass_name`](https://github.com/rails/rails/blob/v3.2.2/activesupport/lib/active_support/dependencies.rb#L182-L183).  `const_missing` is called implicitly by the Ruby VM since it's not invoked explicitly in [auxiliary/pro/social_engineering/web_phish](https://github.com/rapid7/pro/blob/3370204851ac2d93ba2b3816b3762350799c21df/modules/auxiliary/pro/social_engineering/web_phish.rb#L56)
+From line 192, we now know that the `camel_case_word` argument in `ActiveSupport::Inspect#constantize` is the `namespace` local here in `ModuleConstMissing#const_missing`.  `namespace` is an element of [`nesting`](https://github.com/rails/rails/blob/v3.2.2/activesupport/lib/active_support/dependencies.rb#L190).  `nesting` could either be [passed in](https://github.com/rails/rails/blob/v3.2.2/activesupport/lib/active_support/dependencies.rb#L175) or [derived from `klass_name`](https://github.com/rails/rails/blob/v3.2.2/activesupport/lib/active_support/dependencies.rb#L182-L183).  `const_missing` is called implicitly by the Ruby VM since it's not invoked explicitly in `auxiliary/pro/social_engineering/web_phish`.
 
 ![`auxiliary/pro/social_engineering/web_phish` `Metasploit3#run`](/images/auxiliary-pro-social-engineering-web-phish-run.png)
 
