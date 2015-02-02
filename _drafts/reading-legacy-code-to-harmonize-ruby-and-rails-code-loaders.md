@@ -290,7 +290,7 @@ From line 192, we now know that the `camel_case_word` argument in `ActiveSupport
 
 ![`auxiliary/pro/social_engineering/web_phish` `Metasploit3#run`](/images/auxiliary-pro-social-engineering-web-phish-run.png)
 
-This leaves the data flow for `nesting` being `name` → `name.presence` → `klass_name` → `klass_name.to_s` → `klass_name.to_s.scan` → `nesting`.  The original messed up `namespace`, which was `#<Module:0x0000010c916448>` must either be either the direct `Module#name` if `Module#name` contains no `::` or be part of `Module#name`.
+This leaves the data flow for `nesting` being `name` → `name.presence` → `klass_name` → `klass_name.to_s` → `klass_name.to_s.scan` → `nesting`.  The original messed up `namespace`, which was `#<Module:0x0000010c916448>` must be either the direct `Module#name` if `Module#name` contains no `::` or be part of `Module#name`.
 
 ### Debugging
 
