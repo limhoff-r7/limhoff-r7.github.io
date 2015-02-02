@@ -19,7 +19,7 @@ Metasploit Framework is a tool for developing and executing exploits code agains
 
 ## Code-Loading in Ruby
 
-Ruby has 3 ways to load code in the standard library:
+Ruby has 3 primary ways to load code in the standard library:
 
 1. `load`
 2. `require`
@@ -34,6 +34,10 @@ All three search for files in the load path, which is an array of String represe
 ### `require`
 
 `require` is a little higher level than `load`.  It will automatically add on the `.rb` extension and any extensions your system uses for C extension like `.dll` on Windows, `.so` on Linux, or `.dylib` on OS X.  This has the benefit of your code not needing to know whether you're using a pure Ruby library with a `.rb` extension or C extension library with an different extension.  This power of `require` is what allows you to use C-extension gems in your bundle without having to change all your requires.  `require` also has the nice benefit that it's thread-safe due a lock used in the Ruby VM while `load` is not thread-safe.
+
+#### `require_relative`
+
+Related to `require`, `require_relative` ignores `$LOAD_PATH` and instead uses `__FILE__`, the path of the current file, to load other files.  Use of `require_relative` should be seen as a code smell that a project has not properly setup its `$LOAD_PATH`, such as in gems when the `gemspec` does not add the project's `lib` to `$LOAD_PATH`.
 
 ### `autoload`
 
