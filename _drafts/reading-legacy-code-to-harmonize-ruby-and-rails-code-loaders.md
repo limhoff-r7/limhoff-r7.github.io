@@ -616,7 +616,7 @@ Reloading a module can fail due to any `Exception` being encountered when evalua
 
 [![`Msf::Module::Loader::Base#load_module` `module_eval_with_lexical_scope`](/images/msf-modules-loader-base-load-module-module-eval-with-lexical-scope.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L114-L123)
 
-The reason for this, is that refactoring into new modules and classes actually introduced a bug: the `Msf` module was lost from the lexical scope.  The loss of `Msf` in the lexical scope is an issue because there are modules (like `auxiliary/dos/ssl/dtls_changecipherspec`) that didn't fully-qualify their constants.
+The reason for this is that refactoring into new modules and classes actually introduced a bug: the `Msf` module was lost from the lexical scope.  The loss of `Msf` in the lexical scope is an issue because there are modules (like `auxiliary/dos/ssl/dtls_changecipherspec`) that didn't fully qualify their constants.
 
 ![`auxiliary/dos/ssl/dtls_changecipherspec`](/images/auxiliary-dos-ssl-dtls-changecipherspec.png)
 
