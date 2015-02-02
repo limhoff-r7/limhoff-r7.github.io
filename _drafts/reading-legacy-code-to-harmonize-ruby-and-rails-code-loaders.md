@@ -629,7 +629,7 @@ This is a slight digression to explain constant lookup in Ruby.  The following r
 1. Look at the lexically scoped constants
 2. Look at the ancestors of the current `Module` or `Class`
 
-The tricky part comes in what counts as the lexical scope.  It turns out that the lexical scope is not as simple as listing the namespace modules.
+The tricky part is what counts as the lexical scope.  It turns out that the lexical scope is not as simple as listing the namespace modules.
 
 <script src="https://gist.github.com/limhoff-r7/2ab2aac4011cc047174f.js"></script>
 
