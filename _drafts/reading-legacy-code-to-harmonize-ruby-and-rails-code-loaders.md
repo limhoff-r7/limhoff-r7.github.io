@@ -661,7 +661,7 @@ After the escaping, `NAMESPACE_MODULE_NAMES` is prefixed.  `NAMESPACE_MODULE_NAM
 
 ##### Nesting string Modules
 
-To build up a lexical scope, the code needs to wrap child modules in `module Parent ... end` blocks.  Instead of have to prepend `module Parent` to the front of a string and append `end` to the end of the a string, I reverse the `namespace_module_names` so I can build the inner `module`s first and then wrap them with the parent module like Russian nesting dolls.
+To build up a lexical scope, the code needs to wrap child modules in `module Parent ... end` blocks.  Instead of having to prepend `module Parent` to the front of a string and append `end` to the end of the a string, I reverse the `namespace_module_names` so I can build the inner `module`s first and then wrap them with the parent module like Russian nesting dolls.
 
 [![`Msf::Modules::Loader::Base#create_namespace_module` `namespace_module_content`](/images/msf-modules-loader-base-create-namespace-module-namespace-module-content.png)](https://github.com/rapid7/metasploit-framework/blob/df9db42c32b572672ebd19fa4e6c7482c9876c2f/lib/msf/core/modules/loader/base.rb#L338-L353)
 
