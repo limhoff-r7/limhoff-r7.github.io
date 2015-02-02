@@ -395,7 +395,7 @@ Finally we get back to creating an anonymous module.  Prefixing a constant with 
 
 ![`Msf::ModuleManager.wrapper_module` `Module.new`](/images/msf-module-manager-wrapper-module-module-new.png)
 
-So, we didn't pass the `child_name` to `Module.new`, how does it know it's name?  Well it's turns out that the Ruby VM tells a Module it's name the first time it's associated with a constant, so setting the `child_name` constant on the `parent` namespace module will make the Module be named.
+So, if we didn't pass the `child_name` to `Module.new`, how does it know it's name?  Well it's turns out that the Ruby VM tells a Module it's name the first time it's associated with a constant, so setting the `child_name` constant on the `parent` namespace module will make the Module be named.
 
 ![`Msf::ModuleManager.wrapper_module` `const_set`](/images/msf-module-manager-wrapper-module-const-set.png)
 
