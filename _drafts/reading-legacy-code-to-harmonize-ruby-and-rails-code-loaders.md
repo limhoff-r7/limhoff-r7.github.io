@@ -25,7 +25,7 @@ Ruby has 3 primary ways to load code in the standard library:
 2. `require`
 3. `autoload`
 
-All three search for files in the load path, which is an array of String representing directories under which relative paths can be resolved.  (If an absolute path is given the it is loaded directly without checking under directories in the load path.) The current load path can be accessed in the `$:` or the less cryptic, `$LOAD_PATH`.
+All three search for files in the load path, which is an array of String representing directories under which relative paths can be resolved.  (If an absolute path is given then it is loaded directly without checking under directories in the load path.) The current load path can be accessed in the `$:` variable or the less cryptic `$LOAD_PATH` variable.
 
 ### `load`
 
